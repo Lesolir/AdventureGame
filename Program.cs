@@ -150,30 +150,39 @@ namespace KeyQuest
 
         }
         // This is the action menu
-        static int HeroAction()
+        static int HeroAction(Hero[] hero, ref int currentGame)
         {
-            Console.WriteLine("What do you want to do?");
-            Console.WriteLine("1. Go north");
-            Console.WriteLine("2. Go east");
-            Console.WriteLine("3. Go south");
-            Console.WriteLine("4. Go west");
-            Console.WriteLine("\n5. Watch the map");
-            Console.WriteLine("6. Drink a potion");
-            Console.WriteLine("7. Upgrade weapon");
-            Console.WriteLine("\n8. Exit to main menu");
-            Console.WriteLine("\nPlease select one of the above alternatives\nConfirm with ENTER");
+            int answer = 0;
+            bool exit = false;
+            while(exit == false)
+            {
+                Console.Clear();
+                HeroInfo(hero, ref currentGame);
+                Console.WriteLine("What do you want to do?");
+                Console.WriteLine("1. Go north");
+                Console.WriteLine("2. Go east");
+                Console.WriteLine("3. Go south");
+                Console.WriteLine("4. Go west");
+                Console.WriteLine("\n5. Watch the map");
+                Console.WriteLine("6. Drink a potion");
+                Console.WriteLine("7. Upgrade weapon");
+                Console.WriteLine("\n8. Exit to main menu");
+                Console.WriteLine("\nPlease select one of the above alternatives\nConfirm with ENTER");
 
             //int.TryParse(Console.ReadLine(), out int answer);
-            int answer;
-
-            while(!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
-                ErrorInput();
             
+
+            if(!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
+                ErrorInput();
+            else   
+                exit = true;
+            }
             return answer;
         }
         // This is the error input message
         static void ErrorInput()
         {
+            Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth) / 2 - 21, Console.CursorTop + 2);
             Console.WriteLine("ERROR! Invalid selection, please try again.");
             Console.SetCursorPosition((Console.WindowWidth) / 2 - 11, Console.CursorTop + 1);
@@ -268,22 +277,39 @@ namespace KeyQuest
                     while(!exit)
                     {
                         Console.Clear();
-                        HeroInfo(hero, ref currentGame);
-                        answer = HeroAction();
+                        //HeroInfo(hero, ref currentGame);
+                        answer = HeroAction(hero, ref currentGame);
+                        int test = 0;
 
                         switch(answer)
                         {
                             case 1:
-                                hero[currentGame].SetPositionY(-1);
+                                test = hero[currentGame].GetPositionY();
+                                if(test == 1)
+                                    ErrorInput();
+                                else
+                                    hero[currentGame].SetPositionY(-1);
                                 break;
                             case 2:
-                                hero[currentGame].SetPositionX(+1);
+                                test = hero[currentGame].GetPositionX();
+                                if (test == 10)
+                                    ErrorInput();
+                                else
+                                    hero[currentGame].SetPositionX(+1);
                                 break;
                             case 3:
-                                hero[currentGame].SetPositionY(+1);
+                                test = hero[currentGame].GetPositionY();
+                                if (test == 10)
+                                    ErrorInput();
+                                else
+                                    hero[currentGame].SetPositionY(+1);
                                 break;
                             case 4:
-                                hero[currentGame].SetPositionX(-1);
+                                test = hero[currentGame].GetPositionX();
+                                if (test == 1)
+                                    ErrorInput();
+                                else
+                                    hero[currentGame].SetPositionX(-1);
                                 break;
                             case 5:
                                 break;
