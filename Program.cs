@@ -99,8 +99,7 @@ namespace KeyQuest
             Console.WriteLine("Building World");
             
             for(int y = 0; y < 10; y++)
-            {
-                
+            {   
                 for(int x = 0; x < 10; x++)
                 {
                     cell[x,y] = new Cell();
@@ -167,11 +166,11 @@ namespace KeyQuest
             {
                 Console.Clear();
                 HeroInfo(hero, ref currentGame);
-                Console.WriteLine("What do you want to do?");
-                Console.WriteLine("1. Go north");
-                Console.WriteLine("2. Go east");
-                Console.WriteLine("3. Go south");
-                Console.WriteLine("4. Go west");
+                Console.WriteLine("What do you want to do?\n");
+                Console.WriteLine("1. Go Up");
+                Console.WriteLine("2. Go Left");
+                Console.WriteLine("3. Go Down");
+                Console.WriteLine("4. Go Right");
                 Console.WriteLine("\n5. Watch the map");
                 Console.WriteLine("6. Drink a potion");
                 Console.WriteLine("7. Upgrade weapon");
@@ -289,6 +288,7 @@ namespace KeyQuest
                         //HeroInfo(hero, ref currentGame);
                         answer = HeroAction(hero, ref currentGame);
                         int test = 0;
+                        Cell land = new Cell();
 
                         switch(answer)
                         {
@@ -297,6 +297,7 @@ namespace KeyQuest
                                 if(test == 1)
                                     ErrorInput();
                                 else
+                                    Console.WriteLine(land.GetLandType());
                                     hero[currentGame].SetPositionY(-1);
                                 break;
                             case 2:
