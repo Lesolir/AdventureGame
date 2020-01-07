@@ -51,10 +51,19 @@ namespace KeyQuest
             Console.Write("\n\n\nPlease enter the name of your hero (confirm with ENTER):");
             string answer = Console.ReadLine();
             hero[savedGames].SetName(answer);
+            Console.Clear();
+            Console.WriteLine("\n\nWelcome {0}! You seem to be confused why you are here in this empty space.", answer);
+            Console.WriteLine("The truth is, you are dead...but I'm willing to give you another chance to live that is if you can clear my quest for you.");
+            Console.WriteLine("Behind me there is a portal and it will lead you to a dungeon of some sort with a lot of secrets, there is 10 rooms filled with monsters, if you are lucky there will be none.");
+            Console.WriteLine("You have to find 10 keys after that you need to reach the last room and enter the portal to go back to your normal life and your memory of me and this place will be erased.");
+            Console.WriteLine("I wish you luck..hehe..");
+            Console.WriteLine("{0}: ..what was that creature..? *slowly enters the portal*", answer);
 
             HeroInfo(hero, ref currentGame);            
             Console.WriteLine("\n\nStart Game: Press ENTER");
             Console.ReadLine();
+
+
 
             savedGames++;
             savedGames.ToString(saved);
