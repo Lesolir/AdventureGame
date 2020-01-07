@@ -96,7 +96,10 @@ namespace KeyQuest
         }
         public void SetPositionX(int positionX)
         {
-            this.positionX = positionX;
+            if (positionX == -1)
+                this.positionX--;
+            else
+                this.positionX++;
         }
         public int GetPositionX()
         {
@@ -105,7 +108,10 @@ namespace KeyQuest
         }
         public void SetPositionY(int positionY)
         {
-            this.positionY = positionY;
+            if(positionY == -1)
+                this.positionY--;
+            else
+                this.positionY++;
         }
         public int GetPositionY()
         {
