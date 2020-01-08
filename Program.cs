@@ -24,7 +24,7 @@ namespace KeyQuest
             }
             int savedGames = int.Parse(saved);
             Console.Clear();
-            Console.SetCursorPosition((Console.WindowWidth - 9) / 2, Console.CursorTop + 6);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 7, Console.CursorTop + 6);
             Console.WriteLine("Main Menu");
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop + 2);
             Console.WriteLine("1. New Game (free slots: {0}/10)", 10 - savedGames);
@@ -32,7 +32,7 @@ namespace KeyQuest
             Console.WriteLine("2. Load Game (saved games: {0}/10)", savedGames);
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop);
             Console.WriteLine("3. Exit");
-            Console.SetCursorPosition((Console.WindowWidth - 47) / 2, Console.CursorTop + 2);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 2);
             Console.WriteLine("Please select an option and confirm with ENTER");
             return savedGames;
         }
@@ -42,15 +42,15 @@ namespace KeyQuest
             //Hero[] hero = new Hero[10];
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
-            int currentGame = savedGames;
-            hero[savedGames] = new Hero();
+            int currentGame = savedGames + 1;
+            hero[currentGame] = new Hero();
 
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 9, Console.CursorTop);
             Console.WriteLine("Character Creation");
             Console.Write("\n\n\nPlease enter the name of your hero (confirm with ENTER):");
             string answer = Console.ReadLine();
-            hero[savedGames].SetName(answer);
+            hero[currentGame].SetName(answer);
             Console.Clear();
             Console.WriteLine("\n\nWelcome {0}! You seem to be confused why you are here in this empty space.", answer);
             Console.WriteLine("The truth is, you are dead...but I'm willing to give you another chance to live that is if you can clear my quest for you.");
@@ -66,7 +66,7 @@ namespace KeyQuest
 
 
             savedGames++;
-            savedGames.ToString(saved);
+            saved = savedGames.ToString();
             System.IO.File.WriteAllText(@"SavedGames.txt", saved);
             return currentGame;
         }
@@ -125,7 +125,10 @@ namespace KeyQuest
                 y = random.Next(0, 10);
                 mob = cell[x, y].GetMobs();
                 if (mob == 0)
-                    cell[x, y].SetMob();
+                    if (cell[x, y] == cell[0, 9] || cell[x, y] == cell[9, 0])
+                        i--;
+                    else
+                        cell[x, y].SetMob();
                 else
                     i--;
             }
@@ -141,16 +144,51 @@ namespace KeyQuest
                 y = random.Next(0, 10);
                 key = cell[x, y].GetKey();
                 if (key == 0)
-                    cell[x, y].SetKey(1);
+                    if (cell[x, y] == cell[0, 9] || cell[x, y] == cell[9, 0])
+                        i--;
+                    else
+                        cell[x, y].SetKey(1);
                 else
                     i--;
             }
         }
         // This is the load game menu
+        static string LoadGameMenu()
+        {
+            string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
+            int savedGames = int.Parse(saved);
+            Console.Clear();
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop + 6);
+            Console.WriteLine("Load Game Menu");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 10, Console.CursorTop + 2);
+            Console.WriteLine("Saved games: {0}/10)", savedGames);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop);
+            Console.WriteLine("1. Load Game");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop);
+            Console.WriteLine("2. Delete Game");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop);
+            Console.WriteLine("3. Exit");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 2);
+            Console.WriteLine("Please select an option and confirm with ENTER");
+            Console.SetCursorPosition((Console.WindowWidth) / 2 - 7, Console.CursorTop + 2);
+            string choice = Console.ReadLine();
+            return choice;
+        }
+        // This is the load game
         static int LoadGame()
         {
             int currentGame = 0;
             return currentGame;
+        }
+        // This is the delete game menu
+        static void DeleteGame()
+        {
+            string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
+            int savedGames = int.Parse(saved);
+            if(savedGames > 0)
+                savedGames--;
+            saved = savedGames.ToString();
+            System.IO.File.WriteAllText(@"SavedGames.txt", saved);
         }
         // This loads a saved world
         static void LoadWorld(Cell[,] cell)
@@ -158,13 +196,15 @@ namespace KeyQuest
 
         }
         // This is the action menu
-        static int HeroAction(Hero[] hero, ref int currentGame)
+        static int HeroAction(Hero[] hero, ref int currentGame, ref Cell[,] cell)
         {
             int answer = 0;
             bool exit = false;
             while (exit == false)
             {
                 Console.Clear();
+                Console.SetCursorPosition((Console.WindowWidth / 2) -6, Console.CursorTop + 1);
+                Console.WriteLine("KeyQuest");
                 HeroInfo(hero, ref currentGame);
                 Console.WriteLine("What do you want to do?\n");
                 Console.WriteLine("1. Go Up");
@@ -252,7 +292,7 @@ namespace KeyQuest
                     else
                     {
                         ErrorInput();
-                        Console.WriteLine("There are no free slots for new games");
+                        Console.WriteLine("\n\nThere are no free slots for new games");
                         Console.WriteLine("Please delete a saved game to be able to create a new game");
                         Console.WriteLine("Press ENTER to continue");
                         Console.ReadLine();
@@ -262,14 +302,26 @@ namespace KeyQuest
                 {
                     if (savedGames > 0)
                     {
-                        currentGame = LoadGame();
-                        runGame = true;
-                        loadGame = true;
+                        while(exit == false)
+                        {
+                            choice = LoadGameMenu();
+                            currentGame = LoadGame();
+                            if(choice == "1")
+                            {
+                                runGame = true;
+                                loadGame = true;
+                            }
+                            else if(choice == "2")
+                                DeleteGame();
+                            else if(choice == "3")
+                                exit = true;
+                        }
+                        exit = false;
                     }
                     else
                     {
                         ErrorInput();
-                        Console.WriteLine("There are no saved games to load");
+                        Console.WriteLine("\n\nThere are no saved games");
                         Console.WriteLine("Please create a new game to play");
                         Console.WriteLine("Press ENTER to continue");
                         Console.ReadLine();
@@ -296,7 +348,7 @@ namespace KeyQuest
                     {
                         Console.Clear();
                         //HeroInfo(hero, ref currentGame);
-                        answer = HeroAction(hero, ref currentGame);
+                        answer = HeroAction(hero, ref currentGame, ref cell);
                         int test = 0;
                         Cell land = new Cell();
 
@@ -336,8 +388,6 @@ namespace KeyQuest
                             case 6:
                                 break;
                             case 7:
-                                break;
-                            case 8:
                                 exit = true;
                                 break;
                             default:
