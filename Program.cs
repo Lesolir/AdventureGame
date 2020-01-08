@@ -208,14 +208,39 @@ namespace KeyQuest
                 HeroInfo(hero, ref currentGame);
                 Console.WriteLine("What do you want to do?\n");
                 Console.WriteLine("1. Go Up");
-                Console.WriteLine("2. Go Left");
+                Console.WriteLine("2. Go Right");
                 Console.WriteLine("3. Go Down");
-                Console.WriteLine("4. Go Right");
+                Console.WriteLine("4. Go Left");
                 Console.WriteLine("\n5. Watch the map");
                 Console.WriteLine("6. Drink a potion");
                 Console.WriteLine("7. Upgrade weapon");
                 Console.WriteLine("\n8. Exit to main menu");
                 Console.WriteLine("\nPlease select one of the above alternatives\nConfirm with ENTER");
+
+                int heroX = hero[currentGame].GetPositionX()-1;
+                int heroY = hero[currentGame].GetPositionY()-1;
+                cell[heroX,heroY].SetVisited(1);
+                int cellX = 0;
+                int cellY = 0;
+                Console.SetCursorPosition(Console.WindowLeft + 56, Console.CursorTop - 18);
+                Console.WriteLine("Map of the vast and mysterious world");
+                for(int i = 0; i < 10; i++)
+                {
+                    Console.SetCursorPosition(Console.WindowLeft + 60, Console.CursorTop + 1);
+                    for(int z = 60; z < 90; z+=3)
+                    {
+                        Console.SetCursorPosition(Console.WindowLeft + z, Console.CursorTop);
+                        if(cell[cellX,cellY].GetVisited() == 0)
+                            Console.Write("[ ]");
+                        else if(cellX == heroX && cellY == heroY)
+                            Console.Write("[@]");
+                        else if(cell[cellX,cellY].GetVisited() == 1)
+                            Console.Write("[x]");
+                        cellX++;
+                    }
+                    cellX = 0;
+                    cellY++;
+                }
 
                 //int.TryParse(Console.ReadLine(), out int answer);
 
