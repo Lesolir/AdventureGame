@@ -9,3 +9,14 @@ c:\Users\arkea\Code\KeyQuest\bin\Debug\netcoreapp3.0\KeyQuest.dll
 c:\Users\arkea\Code\KeyQuest\bin\Debug\netcoreapp3.0\KeyQuest.pdb
 c:\Users\arkea\Code\KeyQuest\obj\Debug\netcoreapp3.0\KeyQuest.dll
 c:\Users\arkea\Code\KeyQuest\obj\Debug\netcoreapp3.0\KeyQuest.pdb
+C:\Users\Greattech\Documents\GitHub\AdventureGame\bin\Debug\netcoreapp3.0\KeyQuest.exe
+C:\Users\Greattech\Documents\GitHub\AdventureGame\bin\Debug\netcoreapp3.0\KeyQuest.deps.json
+C:\Users\Greattech\Documents\GitHub\AdventureGame\bin\Debug\netcoreapp3.0\KeyQuest.runtimeconfig.json
+C:\Users\Greattech\Documents\GitHub\AdventureGame\bin\Debug\netcoreapp3.0\KeyQuest.runtimeconfig.dev.json
+C:\Users\Greattech\Documents\GitHub\AdventureGame\bin\Debug\netcoreapp3.0\KeyQuest.dll
+C:\Users\Greattech\Documents\GitHub\AdventureGame\bin\Debug\netcoreapp3.0\KeyQuest.pdb
+C:\Users\Greattech\Documents\GitHub\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.csprojAssemblyReference.cache
+C:\Users\Greattech\Documents\GitHub\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.AssemblyInfoInputs.cache
+C:\Users\Greattech\Documents\GitHub\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.AssemblyInfo.cs
+C:\Users\Greattech\Documents\GitHub\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.dll
+C:\Users\Greattech\Documents\GitHub\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.pdb
