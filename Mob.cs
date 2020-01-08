@@ -9,7 +9,7 @@ namespace KeyQuest
         private int attack = 10;
         private int potionDrop = 0;
 
-
+        
         public Mob()
         {}
 
@@ -23,34 +23,34 @@ namespace KeyQuest
             switch(nameRand)
             {
                 case 0:
-                    name = " an ugly monster";
+                    name = "an ugly monster";
                     break;
                 case 1:
-                    name = " a minion";
+                    name = "a minion";
                     break;
                 case 2:
-                    name = " a goblin";
+                    name = "a goblin";
                     break;
                 case 3:
-                    name = " a wolf";
+                    name = "a wolf";
                     break;
                 case 4:
-                    name = " an old lady with a handbag";
+                    name = "an old lady with a handbag";
                     break;
                 case 5:
-                    name = " a troll";
+                    name = "a troll";
                     break;
                 case 6:
-                    name = " a grothmorg";
+                    name = "a grothmorg";
                     break;
                 case 7:
-                    name = " an orc";
+                    name = "an orc";
                     break;
                 case 8:
-                    name = " a balrog";
+                    name = "a balrog";
                     break;
                 case 9:
-                    name = " a were-rabbit";
+                    name = "a were-rabbit";
                     break;
             }
             this.name = name;
@@ -78,9 +78,12 @@ namespace KeyQuest
             int attack = this.attack;
             return attack;
         }
-        public void SetPotionDrop(int potionDrop)
+        public void SetPotionDrop()
         {
-            this.potionDrop = potionDrop;
+            Random random = new Random();
+            int randPotionDrop = random.Next(0, 10);
+            if(randPotionDrop == 5)
+                this.potionDrop = 1;
         }
         public int GetPotionDrop()
         {

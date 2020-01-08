@@ -224,7 +224,6 @@ namespace KeyQuest
                 int cellY = 0;
                 Console.SetCursorPosition(Console.WindowLeft + 56, Console.CursorTop - 18);
                 Console.WriteLine("Map of the vast and mysterious world");
-
                 for (int i = 0; i < 10; i++)
                 {
                     Console.SetCursorPosition(Console.WindowLeft + 60, Console.CursorTop + 1);
@@ -242,7 +241,7 @@ namespace KeyQuest
                     cellX = 0;
                     cellY++;
                 }
-
+                
                 Console.SetCursorPosition(Console.WindowLeft + 21, Console.CursorTop + 6);
                 if (!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
                     ErrorInput();
@@ -251,6 +250,65 @@ namespace KeyQuest
             }
             return answer;
         }
+        // This is the view when player enters a new landscape
+        static void Landscape(Cell[,] cell, ref int heroX, ref int heroY)
+        {
+            string land = cell[heroX,heroY].GetLandType();
+
+            Console.Clear();
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 6);
+            Console.WriteLine("You come to {0}", land);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+            Console.WriteLine("Scanning for hostile creatures");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+            for(int i = 0; i < 20; i++)
+            {
+                System.Threading.Thread.Sleep(100);
+                Console.Write(".");
+            }
+            Console.WriteLine();
+        }
+        // This is when player encounters a monster
+        static string Encounter(Cell[,] cell, ref int heroX, ref int heroY)
+        {
+            bool exit = false;
+            string choice = "";
+            while(exit == false)
+            {
+                int mobs = cell[heroX,heroY].GetMobs();
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+                Console.WriteLine("You are surprised by");
+                for(int i = 0; i < mobs; i++)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+                    Console.WriteLine(cell[heroX,heroY].GetMobName(i));
+                }
+
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                Console.WriteLine("PREPARE!");
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                Console.WriteLine("What do you do?");
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                Console.WriteLine("1. Fight like a man!");
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                Console.WriteLine("2. Poop your pants a litte...then fight!");
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                Console.WriteLine("3. Turn and run as fast as you can!");
+
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                Console.Write("Hurry and choose one af the actions above! Confirm with ENTER ");
+                choice = Console.ReadLine();
+                if(choice == "1" || choice == "2" || choice == "3")
+                    exit = true;
+            }
+            return choice;
+        }
+        // This is where the monsterfight happens
+        static void MonsterFight(Cell[,] cell, ref int heroX, ref int heroY)
+        {
+            
+        }
+        // This is when player try to go out of bounds
         static void WallError()
         {
             Console.Clear();
@@ -259,15 +317,14 @@ namespace KeyQuest
             Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
             Console.WriteLine("Press ENTER to continue");
             Console.ReadLine();
-
         }
         // This is the error input message
         static void ErrorInput()
         {
             Console.Clear();
-            Console.SetCursorPosition((Console.WindowWidth) / 2 - 21, Console.CursorTop + 2);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 21, Console.CursorTop + 2);
             Console.WriteLine("ERROR! Invalid selection, please try again.");
-            Console.SetCursorPosition((Console.WindowWidth) / 2 - 11, Console.CursorTop + 1);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
             Console.WriteLine("Press ENTER to continue");
             Console.ReadLine();
         }
@@ -371,7 +428,6 @@ namespace KeyQuest
                     while (!exit)
                     {
                         Console.Clear();
-                        //HeroInfo(hero, ref currentGame);
                         answer = HeroAction(hero, ref currentGame, ref cell);
                         int test = 0;
 
@@ -382,7 +438,7 @@ namespace KeyQuest
                                 if (test == 1)
                                     WallError();
                                 else
-                                hero[currentGame].SetPositionY(-1);
+                                    hero[currentGame].SetPositionY(-1);
                                 break;
                             case 2:
                                 test = hero[currentGame].GetPositionX();
@@ -415,6 +471,34 @@ namespace KeyQuest
                             default:
                                 break;
                         }
+                        if(answer > 0 && answer <5)
+                        {
+                            int heroX = hero[currentGame].GetPositionX() - 1;
+                            int heroY = hero[currentGame].GetPositionY() - 1;
+                            Landscape(cell, ref heroX, ref heroY);
+                            if(cell[heroX,heroY].GetMobs() > 0)
+                            {
+                                choice = Encounter(cell, ref heroX, ref heroY);
+                                if(choice == "1" || choice == "2")
+                                    MonsterFight(cell, ref heroX, ref heroY);
+                                else
+                                {
+                                    Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                                    Console.WriteLine("You turn around and run for your life. You can hear the evil snarls and shouts behind you..");
+                                    Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
+                                    Console.WriteLine("Press ENTER to continue the adventure");
+                                }
+                            }
+                            else
+                            {
+                                Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                                Console.WriteLine("Your exceptional senses can not find anything hiding");
+                                Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                                Console.WriteLine("Press ENTER to continue your journey");
+                                Console.ReadLine();
+                            }
+                        }
+
                     }
                     exit = false;
                 }
