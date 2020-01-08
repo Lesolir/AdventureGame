@@ -249,7 +249,7 @@ namespace KeyQuest
                     else
                     {
                         ErrorInput();
-                        Console.WriteLine("There are no free slots for new games");
+                        Console.WriteLine("\n\nThere are no free slots for new games");
                         Console.WriteLine("Please delete a saved game to be able to create a new game");
                         Console.WriteLine("Press ENTER to continue");
                         Console.ReadLine();
@@ -266,7 +266,7 @@ namespace KeyQuest
                     else
                     {
                         ErrorInput();
-                        Console.WriteLine("There are no saved games to load");
+                        Console.WriteLine("\n\nThere are no saved games");
                         Console.WriteLine("Please create a new game to play");
                         Console.WriteLine("Press ENTER to continue");
                         Console.ReadLine();
