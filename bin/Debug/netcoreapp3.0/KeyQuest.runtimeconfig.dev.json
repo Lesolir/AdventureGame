@@ -1,9 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\arkea\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\arkea\\.nuget\\packages",
-      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      "C:\\Users\\Greattech\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Greattech\\.nuget\\packages"
     ]
   }
 }
