@@ -224,6 +224,7 @@ namespace KeyQuest
                 int cellY = 0;
                 Console.SetCursorPosition(Console.WindowLeft + 56, Console.CursorTop - 18);
                 Console.WriteLine("Map of the vast and mysterious world");
+
                 for (int i = 0; i < 10; i++)
                 {
                     Console.SetCursorPosition(Console.WindowLeft + 60, Console.CursorTop + 1);
@@ -373,7 +374,6 @@ namespace KeyQuest
                         //HeroInfo(hero, ref currentGame);
                         answer = HeroAction(hero, ref currentGame, ref cell);
                         int test = 0;
-                        Cell land = new Cell();
 
                         switch (answer)
                         {
@@ -382,7 +382,6 @@ namespace KeyQuest
                                 if (test == 1)
                                     WallError();
                                 else
-                                    Console.WriteLine(land.GetLandType());
                                 hero[currentGame].SetPositionY(-1);
                                 break;
                             case 2:
