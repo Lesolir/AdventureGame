@@ -375,7 +375,6 @@ namespace KeyQuest
                         //HeroInfo(hero, ref currentGame);
                         answer = HeroAction(hero, ref currentGame, ref cell);
                         int test = 0;
-                        Cell land = new Cell();
 
                         switch (answer)
                         {
@@ -384,7 +383,6 @@ namespace KeyQuest
                                 if (test == 1)
                                     WallError();
                                 else
-                                    Console.WriteLine(land.GetLandType());
                                 hero[currentGame].SetPositionY(-1);
                                 break;
                             case 2:
