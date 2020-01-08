@@ -66,7 +66,7 @@ namespace KeyQuest
 
 
             savedGames++;
-            savedGames.ToString(saved);
+            saved = savedGames.ToString();
             System.IO.File.WriteAllText(@"SavedGames.txt", saved);
             return currentGame;
         }
