@@ -59,7 +59,7 @@ namespace KeyQuest
             Console.WriteLine("I wish you luck..hehe..");
             Console.WriteLine("{0}: ..what was that creature..? *slowly enters the portal*", answer);
 
-            HeroInfo(hero, ref currentGame);            
+            HeroInfo(hero, ref currentGame);
             Console.WriteLine("\n\nStart Game: Press ENTER");
             Console.ReadLine();
 
@@ -93,17 +93,17 @@ namespace KeyQuest
         static void BuildNewWorld(Cell[,] cell)
         {
             //Cell[,] cell = new Cell[10,10];
-            
+
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 7, Console.CursorTop + 10);
             Console.WriteLine("Building World");
-            
-            for(int y = 0; y < 10; y++)
-            {   
-                for(int x = 0; x < 10; x++)
+
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 10; x++)
                 {
-                    cell[x,y] = new Cell();
-                    cell[x,y].SetLandType();
+                    cell[x, y] = new Cell();
+                    cell[x, y].SetLandType();
                     System.Threading.Thread.Sleep(10);
                     Console.Write(".");
                 }
@@ -162,7 +162,7 @@ namespace KeyQuest
         {
             int answer = 0;
             bool exit = false;
-            while(exit == false)
+            while (exit == false)
             {
                 Console.Clear();
                 HeroInfo(hero, ref currentGame);
@@ -177,15 +177,25 @@ namespace KeyQuest
                 Console.WriteLine("\n8. Exit to main menu");
                 Console.WriteLine("\nPlease select one of the above alternatives\nConfirm with ENTER");
 
-            //int.TryParse(Console.ReadLine(), out int answer);
-            
+                //int.TryParse(Console.ReadLine(), out int answer);
 
-            if(!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
-                ErrorInput();
-            else   
-                exit = true;
+
+                if (!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
+                    ErrorInput();
+                else
+                    exit = true;
             }
             return answer;
+        }
+        static void WallError()
+        {
+            Console.Clear();
+            Console.SetCursorPosition((Console.WindowWidth) / 2 - 21, Console.CursorTop + 2);
+            Console.WriteLine("You ran into a wall with your head first, be careful and don't hurt yourself...");
+            Console.SetCursorPosition((Console.WindowWidth) / 2 - 11, Console.CursorTop + 1);
+            Console.WriteLine("Press ENTER to continue");
+            Console.ReadLine();
+
         }
         // This is the error input message
         static void ErrorInput()
@@ -211,7 +221,7 @@ namespace KeyQuest
 
             Console.Clear();
             Console.Write("\n\n\n\n\n\n\t\tLoading awesome adventures.");
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 System.Threading.Thread.Sleep(200);
                 Console.Write(".");
@@ -221,19 +231,19 @@ namespace KeyQuest
             Hero[] hero = new Hero[10];
             Cell[,] cell = new Cell[10, 10];
             bool exit = false;
-            while(!exit)
+            while (!exit)
             {
                 int savedGames = MainMenu();
                 BuildVersion();
                 bool runGame = false, newGame = false, loadGame = false;
                 int currentGame = 0;
-                
+
                 Console.SetCursorPosition((Console.WindowWidth) / 2 - 7, Console.CursorTop - 12);
                 choice = Console.ReadLine();
 
-                if(choice == "1")
+                if (choice == "1")
                 {
-                    if(savedGames < 10)
+                    if (savedGames < 10)
                     {
                         currentGame = NewGame(hero);
                         runGame = true;
@@ -248,7 +258,7 @@ namespace KeyQuest
                         Console.ReadLine();
                     }
                 }
-                else if(choice == "2")
+                else if (choice == "2")
                 {
                     if (savedGames > 0)
                     {
@@ -265,7 +275,7 @@ namespace KeyQuest
                         Console.ReadLine();
                     }
                 }
-                else if(choice == "3")
+                else if (choice == "3")
                 {
                     exit = true;
                 }
@@ -274,15 +284,15 @@ namespace KeyQuest
                     ErrorInput();
                 }
 
-                if(runGame)
+                if (runGame)
                 {
-                    if(newGame)
+                    if (newGame)
                         BuildNewWorld(cell);
-                    else if(loadGame)
+                    else if (loadGame)
                         LoadWorld(cell);
 
                     int answer = 0;
-                    while(!exit)
+                    while (!exit)
                     {
                         Console.Clear();
                         //HeroInfo(hero, ref currentGame);
@@ -290,34 +300,34 @@ namespace KeyQuest
                         int test = 0;
                         Cell land = new Cell();
 
-                        switch(answer)
+                        switch (answer)
                         {
                             case 1:
                                 test = hero[currentGame].GetPositionY();
-                                if(test == 1)
-                                    ErrorInput();
+                                if (test == 1)
+                                    WallError();
                                 else
                                     Console.WriteLine(land.GetLandType());
-                                    hero[currentGame].SetPositionY(-1);
+                                hero[currentGame].SetPositionY(-1);
                                 break;
                             case 2:
                                 test = hero[currentGame].GetPositionX();
                                 if (test == 10)
-                                    ErrorInput();
+                                    WallError();
                                 else
                                     hero[currentGame].SetPositionX(+1);
                                 break;
                             case 3:
                                 test = hero[currentGame].GetPositionY();
                                 if (test == 10)
-                                    ErrorInput();
+                                    WallError();
                                 else
                                     hero[currentGame].SetPositionY(+1);
                                 break;
                             case 4:
                                 test = hero[currentGame].GetPositionX();
                                 if (test == 1)
-                                    ErrorInput();
+                                    WallError();
                                 else
                                     hero[currentGame].SetPositionX(-1);
                                 break;
@@ -347,11 +357,11 @@ namespace KeyQuest
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 30, Console.CursorTop + 10);
             Console.Write("Chasing away the last monsters.");
-            for(int i = 0; i < 15; i++)
+            for (int i = 0; i < 15; i++)
             {
                 System.Threading.Thread.Sleep(200);
                 Console.Write(".");
-                if(i == 4)
+                if (i == 4)
                     Console.Write("Shoo shoo.");
             }
         }
