@@ -42,15 +42,15 @@ namespace KeyQuest
             //Hero[] hero = new Hero[10];
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
-            int currentGame = savedGames;
-            hero[savedGames] = new Hero();
+            int currentGame = savedGames + 1;
+            hero[currentGame] = new Hero();
 
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 9, Console.CursorTop);
             Console.WriteLine("Character Creation");
             Console.Write("\n\n\nPlease enter the name of your hero (confirm with ENTER):");
             string answer = Console.ReadLine();
-            hero[savedGames].SetName(answer);
+            hero[currentGame].SetName(answer);
             Console.Clear();
             Console.WriteLine("\n\nWelcome {0}! You seem to be confused why you are here in this empty space.", answer);
             Console.WriteLine("The truth is, you are dead...but I'm willing to give you another chance to live that is if you can clear my quest for you.");
@@ -197,7 +197,7 @@ namespace KeyQuest
 
         }
         // This is the action menu
-        static int HeroAction(Hero[] hero, ref int currentGame)
+        static int HeroAction(Hero[] hero, ref int currentGame, ref Cell[,] cell)
         {
             int answer = 0;
             bool exit = false;
@@ -213,16 +213,41 @@ namespace KeyQuest
                 Console.WriteLine("2. Go east");
                 Console.WriteLine("3. Go south");
                 Console.WriteLine("4. Go west");
-                Console.WriteLine("\n5. Watch the map");
-                Console.WriteLine("6. Drink a potion");
-                Console.WriteLine("7. Upgrade weapon");
-                Console.WriteLine("\n8. Exit to main menu");
+                Console.WriteLine("5. Drink a potion");
+                Console.WriteLine("6. Upgrade weapon");
+                Console.WriteLine("\n7. Exit to main menu");
                 Console.Write("\nPlease select one of the above alternatives\nConfirm with ENTER: ");
 
-            if(!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
-                ErrorInput();
-            else   
-                exit = true;
+                int heroX = hero[currentGame].GetPositionX()-1;
+                int heroY = hero[currentGame].GetPositionY()-1;
+                cell[heroX,heroY].SetVisited(1);
+                int cellX = 0;
+                int cellY = 0;
+                Console.SetCursorPosition(Console.WindowLeft + 56, Console.CursorTop - 18);
+                Console.WriteLine("Map of the vast and mysterious world");
+                for(int i = 0; i < 10; i++)
+                {
+                    Console.SetCursorPosition(Console.WindowLeft + 60, Console.CursorTop + 1);
+                    for(int z = 60; z < 90; z+=3)
+                    {
+                        Console.SetCursorPosition(Console.WindowLeft + z, Console.CursorTop);
+                        if(cell[cellX,cellY].GetVisited() == 0)
+                            Console.Write("[ ]");
+                        else if(cellX == heroX && cellY == heroY)
+                            Console.Write("[@]");
+                        else if(cell[cellX,cellY].GetVisited() == 1)
+                            Console.Write("[x]");
+                        cellX++;
+                    }
+                    cellX = 0;
+                    cellY++;
+                }
+
+                Console.SetCursorPosition(Console.WindowLeft + 21, Console.CursorTop + 7);
+                if(!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
+                    ErrorInput();
+                else   
+                    exit = true;
             }
             return answer;
         }
@@ -337,7 +362,7 @@ namespace KeyQuest
                     {
                         Console.Clear();
                         //HeroInfo(hero, ref currentGame);
-                        answer = HeroAction(hero, ref currentGame);
+                        answer = HeroAction(hero, ref currentGame, ref cell);
                         int test = 0;
 
                         switch(answer)
@@ -375,8 +400,6 @@ namespace KeyQuest
                             case 6:
                                 break;
                             case 7:
-                                break;
-                            case 8:
                                 exit = true;
                                 break;
                             default:
