@@ -29,7 +29,7 @@ namespace KeyQuest
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop + 2);
             Console.WriteLine("1. New Game (free slots: {0}/10)", 10 - savedGames);
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop);
-            Console.WriteLine("2. Load Game (saved games: {0}/10)", savedGames);
+            Console.WriteLine("2. Load Game Menu (saved games: {0}/10)", savedGames);
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop);
             Console.WriteLine("3. Exit");
             Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 2);
@@ -48,7 +48,7 @@ namespace KeyQuest
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 9, Console.CursorTop);
             Console.WriteLine("Character Creation");
-            Console.Write("\n\n\nPlease enter the name of your hero (confirm with ENTER):");
+            Console.Write("\n\n\nPlease enter the name of your hero (confirm with ENTER): ");
             string answer = Console.ReadLine();
             hero[currentGame].SetName(answer);
             Console.Clear();
@@ -203,23 +203,46 @@ namespace KeyQuest
             while (exit == false)
             {
                 Console.Clear();
-                Console.SetCursorPosition((Console.WindowWidth / 2) -6, Console.CursorTop + 1);
+                Console.SetCursorPosition(Console.WindowLeft + 56, Console.CursorTop + 1);
                 Console.WriteLine("KeyQuest");
                 HeroInfo(hero, ref currentGame);
-                Console.WriteLine("What do you want to do?\n");
+                Console.WriteLine("\n-----------------------");
+                Console.WriteLine("\nWhat do you want to do?\n");
                 Console.WriteLine("1. Go Up");
-                Console.WriteLine("2. Go Left");
+                Console.WriteLine("2. Go Right");
                 Console.WriteLine("3. Go Down");
-                Console.WriteLine("4. Go Right");
-                Console.WriteLine("\n5. Watch the map");
-                Console.WriteLine("6. Drink a potion");
-                Console.WriteLine("7. Upgrade weapon");
-                Console.WriteLine("\n8. Exit to main menu");
+                Console.WriteLine("4. Go Left");
+                Console.WriteLine("\n5. Drink a potion");
+                Console.WriteLine("6. Upgrade weapon");
+                Console.WriteLine("\n7. Exit to main menu");
                 Console.WriteLine("\nPlease select one of the above alternatives\nConfirm with ENTER");
 
-                //int.TryParse(Console.ReadLine(), out int answer);
+                int heroX = hero[currentGame].GetPositionX() - 1;
+                int heroY = hero[currentGame].GetPositionY() - 1;
+                cell[heroX, heroY].SetVisited(1);
+                int cellX = 0;
+                int cellY = 0;
+                Console.SetCursorPosition(Console.WindowLeft + 56, Console.CursorTop - 18);
+                Console.WriteLine("Map of the vast and mysterious world");
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.SetCursorPosition(Console.WindowLeft + 60, Console.CursorTop + 1);
+                    for (int z = 60; z < 90; z += 3)
+                    {
+                        Console.SetCursorPosition(Console.WindowLeft + z, Console.CursorTop);
+                        if (cell[cellX, cellY].GetVisited() == 0)
+                            Console.Write("[ ]");
+                        else if (cellX == heroX && cellY == heroY)
+                            Console.Write("[@]");
+                        else if (cell[cellX, cellY].GetVisited() == 1)
+                            Console.Write("[x]");
+                        cellX++;
+                    }
+                    cellX = 0;
+                    cellY++;
+                }
 
-
+                Console.SetCursorPosition(Console.WindowLeft + 21, Console.CursorTop + 6);
                 if (!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
                     ErrorInput();
                 else
@@ -230,9 +253,9 @@ namespace KeyQuest
         static void WallError()
         {
             Console.Clear();
-            Console.SetCursorPosition((Console.WindowWidth) / 2 - 21, Console.CursorTop + 2);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
             Console.WriteLine("You ran into a wall with your head first, be careful and don't hurt yourself...");
-            Console.SetCursorPosition((Console.WindowWidth) / 2 - 11, Console.CursorTop + 1);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
             Console.WriteLine("Press ENTER to continue");
             Console.ReadLine();
 
