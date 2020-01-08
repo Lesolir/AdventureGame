@@ -24,7 +24,7 @@ namespace KeyQuest
             }
             int savedGames = int.Parse(saved);
             Console.Clear();
-            Console.SetCursorPosition((Console.WindowWidth - 9) / 2, Console.CursorTop + 6);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 7, Console.CursorTop + 6);
             Console.WriteLine("Main Menu");
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop + 2);
             Console.WriteLine("1. New Game (free slots: {0}/10)", 10 - savedGames);
@@ -32,7 +32,7 @@ namespace KeyQuest
             Console.WriteLine("2. Load Game (saved games: {0}/10)", savedGames);
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop);
             Console.WriteLine("3. Exit");
-            Console.SetCursorPosition((Console.WindowWidth - 47) / 2, Console.CursorTop + 2);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 2);
             Console.WriteLine("Please select an option and confirm with ENTER");
             return savedGames;
         }
@@ -154,10 +154,42 @@ namespace KeyQuest
             }
         }
         // This is the load game menu
+        static string LoadGameMenu()
+        {
+            string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
+            int savedGames = int.Parse(saved);
+            Console.Clear();
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop + 6);
+            Console.WriteLine("Load Game Menu");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 10, Console.CursorTop + 2);
+            Console.WriteLine("Saved games: {0}/10)", savedGames);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop);
+            Console.WriteLine("1. Load Game");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop);
+            Console.WriteLine("2. Delete Game");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop);
+            Console.WriteLine("3. Exit");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 2);
+            Console.WriteLine("Please select an option and confirm with ENTER");
+            Console.SetCursorPosition((Console.WindowWidth) / 2 - 7, Console.CursorTop + 2);
+            string choice = Console.ReadLine();
+            return choice;
+        }
+        // This is the load game
         static int LoadGame()
         {
             int currentGame = 0;
             return currentGame;
+        }
+        // This is the delete game menu
+        static void DeleteGame()
+        {
+            string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
+            int savedGames = int.Parse(saved);
+            if(savedGames > 0)
+                savedGames--;
+            saved = savedGames.ToString();
+            System.IO.File.WriteAllText(@"SavedGames.txt", saved);
         }
         // This loads a saved world
         static void LoadWorld(Cell[,] cell)
@@ -172,8 +204,11 @@ namespace KeyQuest
             while(exit == false)
             {
                 Console.Clear();
+                Console.SetCursorPosition((Console.WindowWidth / 2) -6, Console.CursorTop + 1);
+                Console.WriteLine("KeyQuest");
                 HeroInfo(hero, ref currentGame);
-                Console.WriteLine("What do you want to do?");
+                Console.WriteLine("\n-----------------------");
+                Console.WriteLine("\nWhat do you want to do?");
                 Console.WriteLine("1. Go north");
                 Console.WriteLine("2. Go east");
                 Console.WriteLine("3. Go south");
@@ -182,10 +217,7 @@ namespace KeyQuest
                 Console.WriteLine("6. Drink a potion");
                 Console.WriteLine("7. Upgrade weapon");
                 Console.WriteLine("\n8. Exit to main menu");
-                Console.WriteLine("\nPlease select one of the above alternatives\nConfirm with ENTER");
-
-            //int.TryParse(Console.ReadLine(), out int answer);
-            
+                Console.Write("\nPlease select one of the above alternatives\nConfirm with ENTER: ");
 
             if(!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
                 ErrorInput();
@@ -259,9 +291,21 @@ namespace KeyQuest
                 {
                     if (savedGames > 0)
                     {
-                        currentGame = LoadGame();
-                        runGame = true;
-                        loadGame = true;
+                        while(exit == false)
+                        {
+                            choice = LoadGameMenu();
+                            currentGame = LoadGame();
+                            if(choice == "1")
+                            {
+                                runGame = true;
+                                loadGame = true;
+                            }
+                            else if(choice == "2")
+                                DeleteGame();
+                            else if(choice == "3")
+                                exit = true;
+                        }
+                        exit = false;
                     }
                     else
                     {
