@@ -126,7 +126,10 @@ namespace KeyQuest
                 y = random.Next(0, 10);
                 mob = cell[x, y].GetMobs();
                 if (mob == 0)
-                    cell[x, y].SetMob();
+                    if (cell[x, y] == cell[0, 9] || cell[x, y] == cell[9, 0])
+                        i--;
+                    else
+                        cell[x, y].SetMob();
                 else
                     i--;
             }
@@ -142,7 +145,10 @@ namespace KeyQuest
                 y = random.Next(0, 10);
                 key = cell[x, y].GetKey();
                 if (key == 0)
-                    cell[x, y].SetKey(1);
+                    if (cell[x, y] == cell[0, 9] || cell[x, y] == cell[9, 0])
+                        i--;
+                    else
+                        cell[x, y].SetKey(1);
                 else
                     i--;
             }
