@@ -77,7 +77,7 @@ namespace KeyQuest
         }
         public void SetPotion(int potion)
         {
-            this.potion = potion;
+            this.potion += potion;
         }
         public int GetPotion()
         {

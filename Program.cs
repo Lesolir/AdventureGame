@@ -85,7 +85,7 @@ namespace KeyQuest
             int positionX = hero[currentGame].GetPositionX();
             int positionY = hero[currentGame].GetPositionY();
 
-            Console.WriteLine("\nName: {0}\nLevel: {1}\nXP: {2}\nHealth: {3}\nAttack: {4}\nKeys: {5}\nPotion: ",
+            Console.WriteLine("\nName: {0}\nLevel: {1}\nXP: {2}\nHealth: {3}\nAttack: {4}\nKeys: {5}\nPotion: {6}",
                 name, level, xp, health, attack, keys, potion);
         }
         // This builds the world
@@ -184,7 +184,7 @@ namespace KeyQuest
         {
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
-            if(savedGames > 0)
+            if (savedGames > 0)
                 savedGames--;
             saved = savedGames.ToString();
             System.IO.File.WriteAllText(@"SavedGames.txt", saved);
@@ -240,7 +240,7 @@ namespace KeyQuest
                     cellX = 0;
                     cellY++;
                 }
-                
+
                 Console.SetCursorPosition(Console.WindowLeft + 21, Console.CursorTop + 6);
                 if (!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
                     ErrorInput();
@@ -252,10 +252,10 @@ namespace KeyQuest
         // This is the view when player enters a new landscape
         static int Landscape(Cell[,] cell, ref Hero[] hero, ref int currentGame, ref int heroX, ref int heroY)
         {
-            string land = cell[heroX,heroY].GetLandType();
+            string land = cell[heroX, heroY].GetLandType();
             int clearGame = 0;
             Console.Clear();
-            if (cell[heroX,heroY] == cell[0, 9])
+            if (cell[heroX, heroY] == cell[0, 9])
             {
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 6);
                 Console.WriteLine("You are at the entrance to the mysterious world");
@@ -264,27 +264,28 @@ namespace KeyQuest
             {
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 6);
                 Console.WriteLine("You come to a great door. You can feel the smell of home..");
-                if(hero[currentGame].GetKeys() == 10)
-                    {
-                        Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
-                        Console.WriteLine("You slowly unlock the door.");
-                        Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
-                        Console.WriteLine("Slowly the door creeks open..");
-                        Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 4);
-                        Console.WriteLine("You are the best! You can feel the life flowing back to you..You cleared the quest!");
-                        Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
-                        Console.WriteLine("Press ENTER");
-                        Console.ReadLine();
-                        clearGame = 1;
-                    }   
+                if (hero[currentGame].GetKeys() == 10)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                    Console.WriteLine("You slowly unlock the door.");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+                    Console.WriteLine("Slowly the door creeks open..");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 4);
+                    Console.WriteLine("You are the best! You can feel the life flowing back to you..You cleared the quest!");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                    Console.WriteLine("Press ENTER");
+                    Console.ReadLine();
+                    clearGame = 1;
+                }
             }
             else
-            {   Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 6);
+            {
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 6);
                 Console.WriteLine("You come to {0}", land);
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                 Console.WriteLine("Scanning for hostile creatures");
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
-                for(int i = 0; i < 20; i++)
+                for (int i = 0; i < 20; i++)
                 {
                     System.Threading.Thread.Sleep(100);
                     Console.Write(".");
@@ -294,19 +295,19 @@ namespace KeyQuest
             return clearGame;
         }
         // This is when player encounters a monster
-        static string Encounter(Cell[,] cell, ref Hero[]hero, ref int currentGame, ref int heroX, ref int heroY)
+        static string Encounter(Cell[,] cell, ref Hero[] hero, ref int currentGame, ref int heroX, ref int heroY)
         {
             bool exit = false;
             string choice = "";
-            while(!exit)
+            while (!exit)
             {
-                int mobs = cell[heroX,heroY].GetMobs();
+                int mobs = cell[heroX, heroY].GetMobs();
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
                 Console.WriteLine("You are surprised by");
-                for(int i = 0; i < mobs; i++)
+                for (int i = 0; i < mobs; i++)
                 {
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
-                    Console.WriteLine(cell[heroX,heroY].GetMobName(i));
+                    Console.WriteLine(cell[heroX, heroY].GetMobName(i));
                 }
 
                 Console.SetCursorPosition((Console.WindowWidth / 2), Console.CursorTop + -6);
@@ -323,7 +324,7 @@ namespace KeyQuest
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 11, Console.CursorTop + 1);
                 Console.Write("Hurry and choose one af the actions above! Confirm with ENTER ");
                 choice = Console.ReadLine();
-                if(choice == "1" || choice == "2" || choice == "3")
+                if (choice == "1" || choice == "2" || choice == "3")
                     exit = true;
                 else
                 {
@@ -340,21 +341,21 @@ namespace KeyQuest
             Random random = new Random();
             int mobDmg, health, alive = 1;
             Console.Clear();
-            for(int i = 0; i < cell[heroX,heroY].GetMobs(); i++)
+            for (int i = 0; i < cell[heroX, heroY].GetMobs(); i++)
             {
-                cell[heroX,heroY].SetMobHealth(0, ref i);
+                cell[heroX, heroY].SetMobHealth(0, ref i);
                 mobDmg = random.Next(1, 6);
-                if(mobDmg == 3)
+                if (mobDmg == 3)
                 {
                     health = hero[currentGame].GetHealth();
                     health -= 10;
                     hero[currentGame].SetHealth(health);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
-                    Console.WriteLine("You took 10 damage from {0}", cell[heroX,heroY].GetMobName(i));
-                    if(health == 0)
+                    Console.WriteLine("You took 10 damage from {0}", cell[heroX, heroY].GetMobName(i));
+                    if (health == 0)
                         alive = 0;
                 }
-                if(alive == 0)
+                if (alive == 0)
                 {
                     Console.Clear();
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 6);
@@ -367,7 +368,13 @@ namespace KeyQuest
                     break;
                 }
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
-                Console.WriteLine("You killed {0}", cell[heroX,heroY].GetMobName(i));
+                Console.WriteLine("You killed {0}", cell[heroX, heroY].GetMobName(i));
+                if (cell[heroX, heroY].GetMobPotionDrop(i) == 1)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                    System.Console.WriteLine("You got a potion!");
+                    hero[currentGame].SetPotion(1);
+                }
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                 Console.WriteLine("Press ENTER to continue");
                 Console.ReadLine();
@@ -379,7 +386,7 @@ namespace KeyQuest
         static void FindKey(Cell[,] cell, Hero[] hero, ref int currentGame, ref int heroX, ref int heroY)
         {
             Console.Clear();
-            if(cell[heroX,heroY].GetKey() == 1)
+            if (cell[heroX, heroY].GetKey() == 1)
             {
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                 System.Console.WriteLine("You found a key!!");
@@ -465,18 +472,18 @@ namespace KeyQuest
                 {
                     if (savedGames > 0)
                     {
-                        while(exit == false)
+                        while (exit == false)
                         {
                             choice = LoadGameMenu();
                             currentGame = LoadGame();
-                            if(choice == "1")
+                            if (choice == "1")
                             {
                                 runGame = true;
                                 loadGame = true;
                             }
-                            else if(choice == "2")
+                            else if (choice == "2")
                                 DeleteGame();
-                            else if(choice == "3")
+                            else if (choice == "3")
                                 exit = true;
                         }
                         exit = false;
@@ -544,6 +551,13 @@ namespace KeyQuest
                                     hero[currentGame].SetPositionX(-1);
                                 break;
                             case 5:
+                                if(hero[currentGame].GetPotion() >= 1 && hero[currentGame].GetHealth() < 100)
+                                {
+                                   int potion = hero[currentGame].GetHealth();
+                                    potion += 10;
+                                    hero[currentGame].SetHealth(potion);
+                                    hero[currentGame].SetPotion(-1);
+                                }
                                 break;
                             case 6:
                                 break;
@@ -553,15 +567,15 @@ namespace KeyQuest
                             default:
                                 break;
                         }
-                        if(answer > 0 && answer < 5)
+                        if (answer > 0 && answer < 5)
                         {
                             int heroX = hero[currentGame].GetPositionX() - 1;
                             int heroY = hero[currentGame].GetPositionY() - 1;
                             clearGame = Landscape(cell, ref hero, ref currentGame, ref heroX, ref heroY);
-                            if(cell[heroX,heroY].GetMobs() > 0)
+                            if (cell[heroX, heroY].GetMobs() > 0)
                             {
                                 choice = Encounter(cell, ref hero, ref currentGame, ref heroX, ref heroY);
-                                if(choice == "1" || choice == "2")
+                                if (choice == "1" || choice == "2")
                                     alive = MonsterFight(cell, hero, ref currentGame, ref heroX, ref heroY);
                                 else
                                 {
@@ -575,7 +589,7 @@ namespace KeyQuest
                             }
                             else
                             {
-                                if(cell[heroX, heroY] != cell[0, 9] || cell[heroX, heroY] == cell[9, 0])
+                                if (cell[heroX, heroY] != cell[0, 9] || cell[heroX, heroY] == cell[9, 0])
                                 {
                                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                                     Console.WriteLine("Your exceptional senses can not find anything hiding");
@@ -586,7 +600,7 @@ namespace KeyQuest
                             }
                             FindKey(cell, hero, ref currentGame, ref heroX, ref heroY);
                         }
-                        if(alive == 0 || clearGame == 1)
+                        if (alive == 0 || clearGame == 1)
                             exit = true;
                     }
                     exit = false;
