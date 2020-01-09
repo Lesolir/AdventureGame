@@ -127,7 +127,7 @@ namespace KeyQuest
         }
         public void SetMobs()
         {
-            this.mobs--;
+            this.mobs = 0;
         }
         public int GetMobs()
         {
@@ -143,6 +143,10 @@ namespace KeyQuest
         {
             string mobName = mob[i].GetName();
             return mobName;
+        }
+        public void SetMobHealth(int mobHealth, ref int i)
+        {
+            mob[i].SetHealth(mobHealth);
         }
         public int GetMobHealth(int i)
         {

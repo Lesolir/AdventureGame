@@ -11,7 +11,6 @@ namespace KeyQuest
         private int attack = 10;
         private int keys = 0;
         private int potion = 0;
-        private int weaponUpgrade = 0;
         private int positionX = 1;
         private int positionY = 10;
 
@@ -69,7 +68,7 @@ namespace KeyQuest
         }
         public void SetKeys(int keys)
         {
-            this.keys = keys;
+            this.keys += keys;
         }
         public int GetKeys()
         {
@@ -84,15 +83,6 @@ namespace KeyQuest
         {
             int potion = this.potion;
             return potion;
-        }
-        public void SetWeaponUpgrade(int weaponUpgrade)
-        {
-            this.weaponUpgrade = weaponUpgrade;
-        }
-        public int GetWeaponUpgrade()
-        {
-            int weaponUpgrade = this.weaponUpgrade;
-            return weaponUpgrade;
         }
         public void SetPositionX(int positionX)
         {
