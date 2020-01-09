@@ -8,19 +8,23 @@
     ".NETCoreApp,Version=v3.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Greattech\\.nuget\\packages\\": {}
+    "C:\\Users\\arkea\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Greattech\\Documents\\GitHub\\AdventureGame\\KeyQuest.csproj",
+      "projectUniqueName": "C:\\Users\\arkea\\Code\\KeyQuest\\KeyQuest.csproj",
       "projectName": "KeyQuest",
-      "projectPath": "C:\\Users\\Greattech\\Documents\\GitHub\\AdventureGame\\KeyQuest.csproj",
-      "packagesPath": "C:\\Users\\Greattech\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Greattech\\Documents\\GitHub\\AdventureGame\\obj\\",
+      "projectPath": "C:\\Users\\arkea\\Code\\KeyQuest\\KeyQuest.csproj",
+      "packagesPath": "C:\\Users\\arkea\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\arkea\\Code\\KeyQuest\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Greattech\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\arkea\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.0"

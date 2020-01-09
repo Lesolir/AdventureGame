@@ -4,7 +4,7 @@ namespace KeyQuest
 {
     class Cell
     {
-        private string landType = "Dark Space";
+        private string landType = "Home Sweet Home";
         private int mobs = 0;
         private Mob[] mob = new Mob[3];
         private int key = 0;
@@ -18,92 +18,89 @@ namespace KeyQuest
 
 
         public void SetLandType()
-        {
-            // Forrest, Cave, Marshes, Tundra, Mountains, Dessert, Dark Woods, Ravine, Snowy Mountains
-            // Steppes, Abandoned Mine, Old Fortress, Swamp, Haunted Village, Friendly Village, Town, City, Capital
-            // Silent Castle, Farm, Green Hills, 
+        { 
             string landType = "";
             Random random = new Random();
             int land = random.Next(0,26);
             switch (land)
             {
                 case 0:
-                    landType = " a forrest";
+                    landType = "a forrest";
                     break;
                 case 1:
-                    landType = " a cave";
+                    landType = "a cave";
                     break;
                 case 2:
-                    landType = " the marshes";
+                    landType = "the marshes";
                     break;
                 case 3:
-                    landType = " the tundra";
+                    landType = "the tundra";
                     break;
                 case 4:
-                    landType = " the mountains";
+                    landType = "the mountains";
                     break;
                 case 5:
-                    landType = " the dessert";
+                    landType = "the dessert";
                     break;
                 case 6:
-                    landType = " a dark wood";
+                    landType = "a dark wood";
                     break;
                 case 7:
-                    landType = " a ravine";
+                    landType = "a ravine";
                     break;
                 case 8:
-                    landType = " the snowy mountains";
+                    landType = "the snowy mountains";
                     break;
                 case 9:
-                    landType = " the steppes";
+                    landType = "the steppes";
                     break;
                 case 10:
-                    landType = " an abandoned mine";
+                    landType = "an abandoned mine";
                     break;
                 case 11:
-                    landType = " an old fortress";
+                    landType = "an old fortress";
                     break;
                 case 12:
-                    landType = " a swamp";
+                    landType = "a swamp";
                     break;
                 case 13:
-                    landType = " a haunted village";
+                    landType = "a haunted village";
                     break;
                 case 14:
-                    landType = " a friendy village";
+                    landType = "a friendy village";
                     break;
                 case 15:
-                    landType = " a town";
+                    landType = "a town";
                     break;
                 case 16:
-                    landType = " a city";
+                    landType = "a city";
                     break;
                 case 17:
-                    landType = " a great capital";
+                    landType = "a great capital";
                     break;
                 case 18:
-                    landType = " a silent castle";
+                    landType = "a silent castle";
                     break;
                 case 19:
-                    landType = " a farm";
+                    landType = "a farm";
                     break;
                 case 20:
-                    landType = " the green hills";
+                    landType = "the green hills";
                     break;
                 case 21:
-                    landType = " a graveyard";
+                    landType = "a graveyard";
                     break;
                 case 22:
-                    landType = " an evil ruin";
+                    landType = "an evil ruin";
                     break;
                 case 23:
-                    landType = " a ruin";
+                    landType = "a ruin";
                     break;
                 case 24:
-                    landType = " the cliffs by the ocean";
+                    landType = "the cliffs by the ocean";
                     break;
                 case 25:
-                    landType = " a lake";
+                    landType = "a lake";
                     break;
             }
             this.landType = landType;
@@ -124,8 +121,13 @@ namespace KeyQuest
             {
                 mobs[i] = new Mob();
                 mobs[i].SetName();
+                mobs[i].SetPotionDrop();
                 this.mob[i] = mobs[i];
             }
+        }
+        public void SetMobs()
+        {
+            this.mobs = 0;
         }
         public int GetMobs()
         {
@@ -136,6 +138,25 @@ namespace KeyQuest
         {
             mob[i] = this.mob[i];
             return mob[i];
+        }
+        public string GetMobName(int i)
+        {
+            string mobName = mob[i].GetName();
+            return mobName;
+        }
+        public void SetMobHealth(int mobHealth, ref int i)
+        {
+            mob[i].SetHealth(mobHealth);
+        }
+        public int GetMobHealth(int i)
+        {
+            int mobHealth = mob[i].GetHealth();
+            return mobHealth;
+        }
+        public int GetMobPotionDrop(int i)
+        {
+            int mobPotionDrop = mob[i].GetPotionDrop();
+            return mobPotionDrop;
         }
         public void SetKey(int key)
         {
