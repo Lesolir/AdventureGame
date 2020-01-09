@@ -32,16 +32,16 @@ namespace KeyQuest
         }
         public void SetLevel(int level)
         {
-            this.level = level;
+            this.level += level;
         }
         public int GetLevel()
         {
             int level = this.level;
             return level;
         }
-        public void SetXP(int xp)
+        public void SetXP(int xpDrop)
         {
-            this.xp = xp;
+            this.xp += xpDrop;
         }
         public int GetXP()
         {

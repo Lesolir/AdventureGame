@@ -53,11 +53,11 @@ namespace KeyQuest
             hero[currentGame].SetName(answer);
             Console.Clear();
             Console.WriteLine("\n\nWelcome {0}! You seem to be confused why you are here in this empty space.", answer);
-            Console.WriteLine("The truth is, you are dead...but I'm willing to give you another chance to live that is if you can clear my quest for you.");
-            Console.WriteLine("Behind me there is a portal and it will lead you to a dungeon of some sort with a lot of secrets, there is 10 rooms filled with monsters, if you are lucky there will be none.");
-            Console.WriteLine("You have to find 10 keys after that you need to reach the last room and enter the portal to go back to your normal life and your memory of me and this place will be erased.");
-            Console.WriteLine("I wish you luck..hehe..");
-            Console.WriteLine("{0}: ..what was that creature..? *slowly enters the portal*", answer);
+            Console.WriteLine("The truth is, you are dead...but I'm willing to give you another chance to live...\nthat is if you can clear my quest for you.");
+            Console.WriteLine("Behind me there is a portal and it will lead you to a dungeon of some sort with a lot of secrets.\nThere are 10 rooms filled with monsters, if you are lucky there will be none.");
+            Console.WriteLine("You have to find 10 keys on this quest.\nAfter that you need to reach the last room in the top right corner of this land.\nThen enter the portal to go back to your normal life and your memory of me and this place will be erased.");
+            Console.WriteLine("I wish you good luck..hehe..");
+            Console.WriteLine("\n{0}: ..what was that creature..? *slowly enters the portal*", answer);
 
             HeroInfo(hero, ref currentGame);
             Console.WriteLine("\n\nStart Game: Press ENTER");
@@ -180,7 +180,7 @@ namespace KeyQuest
             return currentGame;
         }
         // This is the delete game menu
-        static void DeleteGame()
+        static int DeleteGame()
         {
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
@@ -188,6 +188,7 @@ namespace KeyQuest
                 savedGames--;
             saved = savedGames.ToString();
             System.IO.File.WriteAllText(@"SavedGames.txt", saved);
+            return savedGames;
         }
         // This loads a saved world
         static void LoadWorld(Cell[,] cell)
@@ -266,16 +267,31 @@ namespace KeyQuest
                 Console.WriteLine("You come to a great door. You can feel the smell of home..");
                 if (hero[currentGame].GetKeys() == 10)
                 {
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                     Console.WriteLine("You slowly unlock the door.");
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
                     Console.WriteLine("Slowly the door creeks open..");
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 4);
+                    System.Threading.Thread.Sleep(1500);
                     Console.WriteLine("You are the best! You can feel the life flowing back to you..You cleared the quest!");
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                     Console.WriteLine("Press ENTER");
                     Console.ReadLine();
                     clearGame = 1;
+                }
+                else
+                {
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                    Console.WriteLine("Unfortunately you have not found 10 keys yet...");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                    Console.WriteLine("You look back over your shoulder into the dark lands behind you");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+                    Console.WriteLine("You do not want to do it...you have had enough of this");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+                    Console.WriteLine("But slowly turning around you know what you have to do");
                 }
             }
             else
@@ -378,6 +394,8 @@ namespace KeyQuest
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                 Console.WriteLine("Press ENTER to continue");
                 Console.ReadLine();
+                hero[currentGame].SetXP(cell[heroX, heroY].GetXPDrop(i));
+                hero[currentGame].SetLevel(1);
             }
             cell[heroX, heroY].SetMobs();
             return alive;
@@ -391,10 +409,22 @@ namespace KeyQuest
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                 System.Console.WriteLine("You found a key!!");
                 hero[currentGame].SetKeys(1);
+                cell[heroX,heroY].SetKey(0);
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                 System.Console.WriteLine("Press ENTER to continue your adventure");
                 Console.ReadLine();
             }
+        }
+        // This is error message when there are no games to load
+        static void LoadGameError()
+        {
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 14, Console.CursorTop + 2);
+            Console.WriteLine("There are no saved games");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 14, Console.CursorTop + 1);
+            Console.WriteLine("Please create a new game to play");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 14, Console.CursorTop + 1);
+            Console.WriteLine("Press ENTER to continue");
+            Console.ReadLine();
         }
         // This is when player try to go out of bounds
         static void WallError()
@@ -462,8 +492,11 @@ namespace KeyQuest
                     else
                     {
                         ErrorInput();
-                        Console.WriteLine("\n\nThere are no free slots for new games");
+                        Console.SetCursorPosition((Console.WindowWidth / 2) - 14, Console.CursorTop + 2);
+                        Console.WriteLine("There are no free slots for new games");
+                        Console.SetCursorPosition((Console.WindowWidth / 2) - 14, Console.CursorTop + 2);
                         Console.WriteLine("Please delete a saved game to be able to create a new game");
+                        Console.SetCursorPosition((Console.WindowWidth / 2) - 14, Console.CursorTop + 2);
                         Console.WriteLine("Press ENTER to continue");
                         Console.ReadLine();
                     }
@@ -474,27 +507,33 @@ namespace KeyQuest
                     {
                         while (exit == false)
                         {
-                            choice = LoadGameMenu();
-                            currentGame = LoadGame();
-                            if (choice == "1")
+                            if (savedGames > 0)
                             {
-                                runGame = true;
-                                loadGame = true;
+                                choice = LoadGameMenu();
+                                currentGame = LoadGame();
+
+                                if (choice == "1")
+                                {
+                                    runGame = true;
+                                    loadGame = true;
+                                }
+                                else if (choice == "2")
+                                    savedGames = DeleteGame();
+                                else if (choice == "3")
+                                    exit = true;
                             }
-                            else if (choice == "2")
-                                DeleteGame();
-                            else if (choice == "3")
+                            else
+                            {
+                                LoadGameError();
                                 exit = true;
+                            }
                         }
                         exit = false;
                     }
                     else
                     {
                         ErrorInput();
-                        Console.WriteLine("\n\nThere are no saved games");
-                        Console.WriteLine("Please create a new game to play");
-                        Console.WriteLine("Press ENTER to continue");
-                        Console.ReadLine();
+                        LoadGameError();
                     }
                 }
                 else if (choice == "3")
@@ -589,7 +628,15 @@ namespace KeyQuest
                             }
                             else
                             {
-                                if (cell[heroX, heroY] != cell[0, 9] || cell[heroX, heroY] == cell[9, 0])
+                                if (cell[heroX, heroY] == cell[0, 9] || cell[heroX, heroY] == cell[9, 0])
+                                {
+                                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                                    Console.WriteLine("Once again you go to face the dangers of the mysterious world");
+                                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
+                                    System.Console.WriteLine("Press ENTER to continue your adventure");
+                                    Console.ReadLine();
+                                }
+                                else
                                 {
                                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                                     Console.WriteLine("Your exceptional senses can not find anything hiding");

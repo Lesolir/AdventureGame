@@ -9,7 +9,6 @@ namespace KeyQuest
         private Mob[] mob = new Mob[3];
         private int key = 0;
         private int potion = 0;
-        private int weaponUpgrade = 0;
         private int visited = 0;
 
 
@@ -19,6 +18,7 @@ namespace KeyQuest
 
         public void SetLandType()
         { 
+            
             string landType = "";
             Random random = new Random();
             int land = random.Next(0,26);
@@ -158,6 +158,11 @@ namespace KeyQuest
             int mobPotionDrop = mob[i].GetPotionDrop();
             return mobPotionDrop;
         }
+        public int GetXPDrop(int i)
+        {
+            int mobXPDrop = mob[i].GetXPDrop();
+            return mobXPDrop;
+        }
         public void SetKey(int key)
         {
             this.key = key;
@@ -175,15 +180,6 @@ namespace KeyQuest
         {
             int potion = this.potion;
             return potion;
-        }
-        public void SetWeaponUpgrade(int weaponUpgrade)
-        {
-            this.weaponUpgrade = weaponUpgrade;
-        }
-        public int GetWeaponUpgrade()
-        {
-            int weaponUpgrade = this.weaponUpgrade;
-            return weaponUpgrade;
         }
         public void SetVisited(int visited)
         {

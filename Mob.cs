@@ -8,6 +8,7 @@ namespace KeyQuest
         private int health = 10;
         private int attack = 10;
         private int potionDrop = 0;
+        private int xpDrop = 10;
 
         
         public Mob()
@@ -89,6 +90,11 @@ namespace KeyQuest
         {
             int potionDrop = this.potionDrop;
             return potionDrop;
+        }
+        public int GetXPDrop()
+        {
+            int xpDrop = this.xpDrop;
+            return xpDrop;
         }
     }
 }

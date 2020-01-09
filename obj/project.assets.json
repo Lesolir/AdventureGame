@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\arkea\\Code\\KeyQuest\\KeyQuest.csproj",
+      "projectUniqueName": "C:\\Users\\arkea\\OneDrive\\Dokument\\GitHub\\AdventureGame\\AdventureGame\\KeyQuest.csproj",
       "projectName": "KeyQuest",
-      "projectPath": "C:\\Users\\arkea\\Code\\KeyQuest\\KeyQuest.csproj",
+      "projectPath": "C:\\Users\\arkea\\OneDrive\\Dokument\\GitHub\\AdventureGame\\AdventureGame\\KeyQuest.csproj",
       "packagesPath": "C:\\Users\\arkea\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\arkea\\Code\\KeyQuest\\obj\\",
+      "outputPath": "C:\\Users\\arkea\\OneDrive\\Dokument\\GitHub\\AdventureGame\\AdventureGame\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
