@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft;
 
 namespace KeyQuest
 {
@@ -8,10 +9,10 @@ namespace KeyQuest
         static void BuildVersion()
         {
             Console.SetCursorPosition(Console.WindowWidth - 8, Console.WindowHeight - 2);
-            Console.WriteLine("V. 0.01");
+            Console.WriteLine("V. 0.4");
         }
         //This is the main menu of the program
-        static int MainMenu()
+        static int MainMenu(string[] savedInfo)
         {
             string saved = "0";
             try
@@ -22,6 +23,14 @@ namespace KeyQuest
             {
                 System.IO.File.WriteAllText(@"SavedGames.txt", saved);
             }
+            try
+            {
+                savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
+            }
+            catch
+            {
+                System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", savedInfo);
+            }
             int savedGames = int.Parse(saved);
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 7, Console.CursorTop + 6);
@@ -29,7 +38,7 @@ namespace KeyQuest
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop + 2);
             Console.WriteLine("1. New Game (free slots: {0}/10)", 10 - savedGames);
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop);
-            Console.WriteLine("2. Load Game Menu (saved games: {0}/10)", savedGames);
+            Console.WriteLine("2. Manage Games Menu (saved games: {0}/10)", savedGames);
             Console.SetCursorPosition((Console.WindowWidth / 2) - 16, Console.CursorTop);
             Console.WriteLine("3. Exit");
             Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 2);
@@ -37,13 +46,13 @@ namespace KeyQuest
             return savedGames;
         }
         // This is the Create new game menu
-        static int NewGame(Hero[] hero)
+        static int NewGame(Hero[] hero, HeroSave[] heroSave, string[] savedInfo, int currentGame)
         {
-            //Hero[] hero = new Hero[10];
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
-            int currentGame = savedGames;
+            currentGame = savedGames;
             hero[currentGame] = new Hero();
+            heroSave[currentGame] = new HeroSave();
 
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 9, Console.CursorTop);
@@ -63,11 +72,10 @@ namespace KeyQuest
             Console.WriteLine("\n\nStart Game: Press ENTER");
             Console.ReadLine();
 
-
-
             savedGames++;
             saved = savedGames.ToString();
             System.IO.File.WriteAllText(@"SavedGames.txt", saved);
+            SaveGame(hero, heroSave, savedInfo, ref currentGame);
             return currentGame;
         }
         // This displays hero info to the console
@@ -151,8 +159,8 @@ namespace KeyQuest
                     i--;
             }
         }
-        // This is the load game menu
-        static string LoadGameMenu()
+        // This is the manage games menu
+        static string ManageGamesMenu()
         {
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
@@ -173,22 +181,139 @@ namespace KeyQuest
             string choice = Console.ReadLine();
             return choice;
         }
-        // This is the load game
-        static int LoadGame()
+        // This is the save game
+        static void SaveGame(Hero[] hero, HeroSave[] heroSave, string[] savedInfo, ref int currentGame)
         {
-            int currentGame = 0;
+            string saveInfo = hero[currentGame].GetSaveInfo();
+            savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
+            savedInfo[currentGame] = saveInfo;
+            System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", savedInfo);
+
+            //string id = hero[currentGame].GetName();
+            //System.IO.File.WriteAllText(@"SavedGameNames" + currentGame + ".txt", id);
+
+            heroSave[currentGame].SetName(hero[currentGame].GetName());
+            heroSave[currentGame].SetLevel(hero[currentGame].GetLevel());
+            heroSave[currentGame].SetXP(hero[currentGame].GetXP());
+            heroSave[currentGame].SetHealth(hero[currentGame].GetHealth());
+            heroSave[currentGame].SetAttack(hero[currentGame].GetAttack());
+            heroSave[currentGame].SetKeys(hero[currentGame].GetKeys());
+            heroSave[currentGame].SetPotion(hero[currentGame].GetPotion());
+            heroSave[currentGame].SetPositionX(hero[currentGame].GetPositionX());
+            heroSave[currentGame].SetPositionY(hero[currentGame].GetPositionY());
+
+            
+            string jsonHero = Newtonsoft.Json.JsonConvert.SerializeObject(heroSave[currentGame]);
+
+            System.IO.File.WriteAllText(currentGame + ".json", jsonHero);
+
+            Console.Clear();
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop + 6);
+            Console.WriteLine("Game Saved");
+            System.Threading.Thread.Sleep(1000);
+            Console.Clear();
+        }
+        // This is the load game
+        static int LoadGameMenu(string[] savedInfo, int savedGames)
+        {
+            int answer = SavedGames("load", savedInfo, savedGames);
+            return answer - 1;
+        }
+        // This loads a game
+        static int LoadGame(Hero[] hero, HeroSave[] heroSave, string[] savedInfo, int currentGame)
+        {
+            string jsonHero = System.IO.File.ReadAllText(currentGame + ".json");
+
+            heroSave[currentGame] = Newtonsoft.Json.JsonConvert.DeserializeObject<HeroSave>(jsonHero);
+
+            hero[currentGame].SetName(heroSave[currentGame].GetName());
+            hero[currentGame].SetLevel(heroSave[currentGame].GetLevel());
+            hero[currentGame].SetXP(heroSave[currentGame].GetXP());
+            hero[currentGame].SetHealth(heroSave[currentGame].GetHealth());
+            hero[currentGame].SetAttack(heroSave[currentGame].GetAttack());
+            hero[currentGame].SetKeys(heroSave[currentGame].GetKeys());
+            hero[currentGame].SetPotion(heroSave[currentGame].GetPotion());
+            hero[currentGame].LoadPositionX(heroSave[currentGame].GetPositionX());
+            hero[currentGame].LoadPositionY(heroSave[currentGame].GetPositionY());
+
             return currentGame;
         }
         // This is the delete game menu
-        static int DeleteGame()
+        static int DeleteGameMenu(string[] savedInfo, int savedGames)
         {
+            int answer = SavedGames("delete", savedInfo, savedGames);
+            return answer - 1;
+        }
+        // This deletes a game
+        static int DeleteGame(int answer, string[] savedInfo)
+        {
+            //string saveInfo = hero[currentGame].GetSaveInfo();
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
+            string[] tempSaved = new string[savedGames];
+            int x = 0;
+            savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
+
+            for(int i = 0; i < savedGames; i++)
+            {
+                if(i != answer)
+                {
+                    tempSaved[x] = savedInfo[i];
+                    x++;
+                }
+                string jsonHero = System.IO.File.ReadAllText(1 + ".json");
+                System.IO.File.WriteAllText(x + ".json", jsonHero);
+                
+            }
+            System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", tempSaved);
+            System.IO.File.Delete(x + ".json");
+            
             if (savedGames > 0)
                 savedGames--;
             saved = savedGames.ToString();
             System.IO.File.WriteAllText(@"SavedGames.txt", saved);
+            for (int i = 0; i < savedGames; i++)
+            {
+                savedInfo[i] = tempSaved[i];
+            }
+
             return savedGames;
+        }
+        static int SavedGames(string action, string[] savedInfo, int savedGames)
+        {
+            savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
+            int answer = 0, x = 1;
+            //string id = "A";
+            bool exit = false;
+            while (!exit)
+            {
+                x = 1;
+                Console.Clear();
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 8, Console.CursorTop + 1);
+                Console.WriteLine("Load Game Menu");
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 14, Console.CursorTop + 1);
+                Console.WriteLine("Here are your saved games\n");
+                for (int i = 0; i < savedGames; i++)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 40, Console.CursorTop + 1);
+                    //if(i < savedGames)
+                    //{
+                        //id = System.IO.File.ReadAllText(@"SavedGameNames" + i + ".txt");
+                    //}
+                    Console.WriteLine(x + ". " + savedInfo[i]);
+                    x++;
+                }
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 40, Console.CursorTop + 2);
+                Console.WriteLine("0. Exit");
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 1);
+                Console.WriteLine("Please select a game to {0}. Confirm with ENTER", action);
+                Console.SetCursorPosition((Console.WindowWidth) / 2 - 7, Console.CursorTop + 2);
+                if (!int.TryParse(Console.ReadLine(), out answer) || answer < 0 || answer > savedGames)
+                    ErrorInput();
+                else
+                    exit = true;
+            }
+            return answer;
         }
         // This loads a saved world
         static void LoadWorld(Cell[,] cell)
@@ -213,7 +338,7 @@ namespace KeyQuest
                 Console.WriteLine("3. Go Down");
                 Console.WriteLine("4. Go Left");
                 Console.WriteLine("\n5. Drink a potion");
-                Console.WriteLine("6. Upgrade weapon");
+                Console.WriteLine("6. Save Game");
                 Console.WriteLine("\n7. Exit to main menu");
                 Console.WriteLine("\nPlease select one of the above alternatives\nConfirm with ENTER");
 
@@ -469,11 +594,13 @@ namespace KeyQuest
             string choice = "0";
             int alive = 1, clearGame = 0;
             Hero[] hero = new Hero[10];
+            HeroSave[] heroSave = new HeroSave[10];
             Cell[,] cell = new Cell[10, 10];
+            string[] savedInfo = new string[10];
             bool exit = false;
             while (!exit)
             {
-                int savedGames = MainMenu();
+                int savedGames = MainMenu(savedInfo);
                 BuildVersion();
                 bool runGame = false, newGame = false, loadGame = false;
                 int currentGame = 0;
@@ -485,7 +612,7 @@ namespace KeyQuest
                 {
                     if (savedGames < 10)
                     {
-                        currentGame = NewGame(hero);
+                        currentGame = NewGame(hero, heroSave, savedInfo, currentGame);
                         runGame = true;
                         newGame = true;
                     }
@@ -504,21 +631,43 @@ namespace KeyQuest
                 else if (choice == "2")
                 {
                     if (savedGames > 0)
-                    {
-                        while (exit == false)
+                    {   
+                        exit = false;
+                        while (!exit)
                         {
                             if (savedGames > 0)
                             {
-                                choice = LoadGameMenu();
-                                currentGame = LoadGame();
-
+                                choice = ManageGamesMenu();
                                 if (choice == "1")
                                 {
-                                    runGame = true;
-                                    loadGame = true;
+                                    int answer = LoadGameMenu(savedInfo, savedGames);
+                                    if (answer >= 0 && answer < savedGames)
+                                    {
+                                        currentGame = answer;
+                                        runGame = true;
+                                        loadGame = true;
+                                        exit = true;
+                                    }
                                 }
                                 else if (choice == "2")
-                                    savedGames = DeleteGame();
+                                {
+                                    if (savedGames > 0)
+                                    {
+                                        int answer = DeleteGameMenu(savedInfo, savedGames);
+                                        if (answer >= 0 && answer <= savedGames)
+                                        {
+                                            savedGames = DeleteGame(answer, savedInfo);
+                                            //exit = true
+                                        }
+                                        else
+                                            exit = true;
+                                    }
+                                    else
+                                    {
+                                        LoadGameError();
+                                        exit = true;
+                                    }
+                                }
                                 else if (choice == "3")
                                     exit = true;
                             }
@@ -529,6 +678,8 @@ namespace KeyQuest
                             }
                         }
                         exit = false;
+                        if(loadGame)
+                            exit = true;
                     }
                     else
                     {
@@ -550,9 +701,13 @@ namespace KeyQuest
                     if (newGame)
                         BuildNewWorld(cell);
                     else if (loadGame)
-                        LoadWorld(cell);
-
+                    {
+                        //LoadWorld(cell);
+                        currentGame = LoadGame(hero, heroSave, savedInfo, currentGame);
+                        BuildNewWorld(cell);
+                    }
                     int answer = 0;
+                    exit = false;
                     while (!exit)
                     {
                         Console.Clear();
@@ -599,6 +754,7 @@ namespace KeyQuest
                                 }
                                 break;
                             case 6:
+                                SaveGame(hero, heroSave, savedInfo, ref currentGame);
                                 break;
                             case 7:
                                 exit = true;

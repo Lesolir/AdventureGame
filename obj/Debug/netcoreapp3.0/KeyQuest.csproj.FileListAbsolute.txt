@@ -20,3 +20,5 @@ c:\Users\arkea\OneDrive\Dokument\GitHub\AdventureGame\AdventureGame\obj\Debug\ne
 c:\Users\arkea\OneDrive\Dokument\GitHub\AdventureGame\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.AssemblyInfo.cs
 c:\Users\arkea\OneDrive\Dokument\GitHub\AdventureGame\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.dll
 c:\Users\arkea\OneDrive\Dokument\GitHub\AdventureGame\AdventureGame\obj\Debug\netcoreapp3.0\KeyQuest.pdb
+c:\Users\arkea\Code\KeyQuest\bin\Debug\netcoreapp3.0\Newtonsoft.Json.dll
+C:\Users\arkea\Code\KeyQuest\obj\Debug\netcoreapp3.0\KeyQuest.csproj.CopyComplete

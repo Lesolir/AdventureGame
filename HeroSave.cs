@@ -2,20 +2,22 @@ using System;
 
 namespace KeyQuest
 {
-    class Hero
+    class HeroSave
     {
-        private string name = "Hero";
-        private int level = 1;
-        private int xp = 0;
-        private int health = 100;
-        private int attack = 10;
-        private int keys = 0;
-        private int potion = 0;
-        private int positionX = 1;
-        private int positionY = 10;
+        public string name {get; set; }
+        public int level { get; set; }
+        public int xp { get; set; }
+        public int health { get; set; }
+        public int attack { get; set; }
+        public int keys { get; set; }
+        public int potion { get; set; }
+        public int positionX { get; set; }
+        public int positionY { get; set; }
 
-        public Hero()
-        {}
+        public HeroSave()
+        { 
+            
+        }
 
 
 
@@ -30,7 +32,7 @@ namespace KeyQuest
         }
         public void SetLevel(int level)
         {
-            this.level += level;
+            this.level = level;
         }
         public int GetLevel()
         {
@@ -39,7 +41,7 @@ namespace KeyQuest
         }
         public void SetXP(int xpDrop)
         {
-            this.xp += xpDrop;
+            this.xp = xpDrop;
         }
         public int GetXP()
         {
@@ -66,7 +68,7 @@ namespace KeyQuest
         }
         public void SetKeys(int keys)
         {
-            this.keys += keys;
+            this.keys = keys;
         }
         public int GetKeys()
         {
@@ -75,7 +77,7 @@ namespace KeyQuest
         }
         public void SetPotion(int potion)
         {
-            this.potion += potion;
+            this.potion = potion;
         }
         public int GetPotion()
         {
@@ -83,13 +85,6 @@ namespace KeyQuest
             return potion;
         }
         public void SetPositionX(int positionX)
-        {
-            if (positionX == -1)
-                this.positionX--;
-            else
-                this.positionX++;
-        }
-        public void LoadPositionX(int positionX)
         {
             this.positionX = positionX;
         }
@@ -100,13 +95,6 @@ namespace KeyQuest
         }
         public void SetPositionY(int positionY)
         {
-            if(positionY == -1)
-                this.positionY--;
-            else
-                this.positionY++;
-        }
-        public void LoadPositionY(int positionY)
-        {
             this.positionY = positionY;
         }
         public int GetPositionY()
@@ -114,8 +102,9 @@ namespace KeyQuest
             int positionY = this.positionY;
             return positionY;
         }
-        public string GetSaveInfo(){
-            string saveInfo = "Name: " + name + " || " + "Level: " + level + " || " + "Health: " + health + " || " + "Keys: " + keys + " || " + "Saved: " + DateTime.Now;
+        public string GetSaveInfo()
+        {
+            string saveInfo = " || " + "Level: " + level + " || " + "Health: " + health + " || " + "Keys: " + keys + " || " + "Saved: " + DateTime.Now;
             return saveInfo;
         }
     }
