@@ -5,7 +5,7 @@ namespace KeyQuest
     class Hero
     {
         private string name = "Hero";
-        private int level = 1;
+        private int level = 0;
         private int xp = 0;
         private int health = 100;
         private int attack = 10;

@@ -2,26 +2,25 @@ using System;
 
 namespace KeyQuest
 {
-    class Cell
+    public class CellSave
     {
-        private string landType = "Home Sweet Home";
-        private int mobs = 0;
-        private Mob[] mob = new Mob[3];
-        private int key = 0;
-        private int potion = 0;
-        private int visited = 0;
+        public string landType { get; set; }
+        public int mobs { get; set; }
+        public Mob[] mob { get; set; } = new Mob[3];
+        public int key { get; set; }
+        public int potion { get; set; }
+        public int visited { get; set; }
 
 
-        public Cell()
-        {}
+        public CellSave()
+        { }
 
 
         public void SetLandType()
-        { 
-            
+        {
             string landType = "";
             Random random = new Random();
-            int land = random.Next(0,26);
+            int land = random.Next(0, 26);
             switch (land)
             {
                 case 0:
@@ -105,10 +104,6 @@ namespace KeyQuest
             }
             this.landType = landType;
         }
-        public void LoadLandType(string landType)
-        {
-            this.landType = landType;
-        }
         public string GetLandType()
         {
             string landType = this.landType;
@@ -116,45 +111,25 @@ namespace KeyQuest
         }
         public void SetMob()
         {
-            Random random = new Random();
-            int mob = random.Next(1,4);
-            this.mobs = mob;
+            Mob[] mobs = new Mob[this.mobs];
             
-            Mob[] mobs = new Mob[mob];
-            for(int i = 0; i < mob; i++)
+            for (int i = 0; i < this.mobs; i++)
             {
                 mobs[i] = new Mob();
                 mobs[i].SetName();
                 mobs[i].SetPotionDrop();
                 this.mob[i] = mobs[i];
             }
-        }
-        public void LoadMob()
-        {
-            int mob = this.mobs;
-            this.mobs = mob;
 
-            Mob[] mobs = new Mob[mob];
-            for (int i = 0; i < mob; i++)
-            {
-                mobs[i] = new Mob();
-                mobs[i].SetName();
-                mobs[i].SetPotionDrop();
-                this.mob[i] = mobs[i];
-            }
         }
-        public void SetMobs()
-        {
-            this.mobs = 0;
-        }
-        public void LoadMobs(int mobs)
+        public void SetMobs(int mobs)
         {
             this.mobs = mobs;
         }
         public int GetMobs()
         {
-            int mob = this.mobs;
-            return mob;
+            int mobs = this.mobs;
+            return mobs;
         }
         public Mob GetMob(int i)
         {

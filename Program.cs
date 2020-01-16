@@ -9,7 +9,7 @@ namespace KeyQuest
         static void BuildVersion()
         {
             Console.SetCursorPosition(Console.WindowWidth - 8, Console.WindowHeight - 2);
-            Console.WriteLine("V. 0.4");
+            Console.WriteLine("V. 1.0");
         }
         //This is the main menu of the program
         static int MainMenu(string[] savedInfo)
@@ -46,10 +46,11 @@ namespace KeyQuest
             return savedGames;
         }
         // This is the Create new game menu
-        static int NewGame(Hero[] hero, HeroSave[] heroSave, string[] savedInfo, int currentGame)
+        static int NewGame(Hero[] hero, HeroSave[] heroSave, CellSave[,] cellSave, Cell[,] cell, string[] savedInfo, int currentGame, int newGameFile)
         {
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             int savedGames = int.Parse(saved);
+            newGameFile = 0;
             currentGame = savedGames;
             hero[currentGame] = new Hero();
             heroSave[currentGame] = new HeroSave();
@@ -75,14 +76,12 @@ namespace KeyQuest
             savedGames++;
             saved = savedGames.ToString();
             System.IO.File.WriteAllText(@"SavedGames.txt", saved);
-            SaveGame(hero, heroSave, savedInfo, ref currentGame);
+            SaveGame(hero, heroSave, cell, cellSave, savedInfo, ref currentGame, newGameFile);
             return currentGame;
         }
         // This displays hero info to the console
         static void HeroInfo(Hero[] hero, ref int currentGame)
         {
-            //string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
-            //int savedGames = int.Parse(saved);
             string name = hero[currentGame].GetName();
             int level = hero[currentGame].GetLevel();
             int xp = hero[currentGame].GetXP();
@@ -97,9 +96,8 @@ namespace KeyQuest
                 name, level, xp, health, attack, keys, potion);
         }
         // This builds the world
-        static void BuildNewWorld(Cell[,] cell)
+        static void BuildNewWorld(Cell[,] cell, CellSave[,] cellSave, int newGameFile)
         {
-            //Cell[,] cell = new Cell[10,10];
 
             Console.Clear();
             Console.SetCursorPosition((Console.WindowWidth / 2) - 7, Console.CursorTop + 10);
@@ -109,17 +107,27 @@ namespace KeyQuest
             {
                 for (int x = 0; x < 10; x++)
                 {
-                    cell[x, y] = new Cell();
-                    cell[x, y].SetLandType();
-                    System.Threading.Thread.Sleep(10);
-                    Console.Write(".");
+                    cellSave[x, y] = new CellSave();
                 }
 
             }
 
-            PlaceMobs(cell);
-            PlaceKeys(cell);
+            if(newGameFile == 0)
+            {
+                for (int y = 0; y < 10; y++)
+                {
+                    for (int x = 0; x < 10; x++)
+                    {
+                        cell[x, y] = new Cell();
+                        cell[x, y].SetLandType();
+                        System.Threading.Thread.Sleep(10);
+                        Console.Write(".");
+                    }
 
+                }
+                PlaceMobs(cell);
+                PlaceKeys(cell);
+            }
         }
         // This places mobs in 10 cells
         static void PlaceMobs(Cell[,] cell)
@@ -182,15 +190,12 @@ namespace KeyQuest
             return choice;
         }
         // This is the save game
-        static void SaveGame(Hero[] hero, HeroSave[] heroSave, string[] savedInfo, ref int currentGame)
+        static void SaveGame(Hero[] hero, HeroSave[] heroSave, Cell[,] cell, CellSave[,] cellSave, string[] savedInfo, ref int currentGame, int newGameFile)
         {
             string saveInfo = hero[currentGame].GetSaveInfo();
             savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
             savedInfo[currentGame] = saveInfo;
             System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", savedInfo);
-
-            //string id = hero[currentGame].GetName();
-            //System.IO.File.WriteAllText(@"SavedGameNames" + currentGame + ".txt", id);
 
             heroSave[currentGame].SetName(hero[currentGame].GetName());
             heroSave[currentGame].SetLevel(hero[currentGame].GetLevel());
@@ -202,6 +207,39 @@ namespace KeyQuest
             heroSave[currentGame].SetPositionX(hero[currentGame].GetPositionX());
             heroSave[currentGame].SetPositionY(hero[currentGame].GetPositionY());
 
+            //========== TEST ==========
+            string directory = System.IO.Directory.GetCurrentDirectory();
+            System.IO.Directory.CreateDirectory(directory + @"\CellSave" + currentGame);
+            string savePath = directory + @"\CellSave" + currentGame + @"\";
+            
+            if(newGameFile == 1)
+            {
+                int z = 1, visited = 0, potion = 0, key = 0;
+                string cellSaveNum = "X", cellSaveFile = "Y";
+                for(int y = 0; y < 10; y++)
+                {
+                    for(int x = 0; x < 10; x++)
+                    {
+                        visited = cell[x, y].GetVisited();
+                        potion = cell[x, y].GetPotion();
+                        key = cell[x, y].GetKey();
+                        cellSave[x,y].SetLandType();
+                        cellSave[x,y].SetMobs(cell[x,y].GetMobs());
+                        cellSave[x,y].SetVisited(visited);
+                        cellSave[x,y].SetPotion(potion);
+                        cellSave[x,y].SetKey(key);
+
+                        cellSave[x,y].SetMob();
+
+                        cellSaveNum = "cellSave" + z;
+                        cellSaveFile = Newtonsoft.Json.JsonConvert.SerializeObject(cellSave[x,y]);
+                        System.IO.File.WriteAllText(savePath + cellSaveNum + ".json", cellSaveFile);
+                        z++;
+                    }
+                }
+            }
+
+            //========== TEST ==========
             
             string jsonHero = Newtonsoft.Json.JsonConvert.SerializeObject(heroSave[currentGame]);
 
@@ -220,11 +258,13 @@ namespace KeyQuest
             return answer - 1;
         }
         // This loads a game
-        static int LoadGame(Hero[] hero, HeroSave[] heroSave, string[] savedInfo, int currentGame)
+        static int LoadGame(Hero[] hero, HeroSave[] heroSave, Cell[,] cell, CellSave[,] cellSave, string[] savedInfo, int currentGame, int newGameFile)
         {
             string jsonHero = System.IO.File.ReadAllText(currentGame + ".json");
 
             heroSave[currentGame] = Newtonsoft.Json.JsonConvert.DeserializeObject<HeroSave>(jsonHero);
+
+            hero[currentGame] = new Hero();
 
             hero[currentGame].SetName(heroSave[currentGame].GetName());
             hero[currentGame].SetLevel(heroSave[currentGame].GetLevel());
@@ -235,6 +275,42 @@ namespace KeyQuest
             hero[currentGame].SetPotion(heroSave[currentGame].GetPotion());
             hero[currentGame].LoadPositionX(heroSave[currentGame].GetPositionX());
             hero[currentGame].LoadPositionY(heroSave[currentGame].GetPositionY());
+
+            //========== TEST ==========
+            string directory = System.IO.Directory.GetCurrentDirectory();
+            
+            string savePath = directory + @"\CellSave" + currentGame + @"\";
+
+            if (newGameFile == 1)
+            {
+                int z = 1;
+                string cellSaveNum = "X";
+                
+                for (int y = 0; y < 10; y++)
+                {
+                    for (int x = 0; x < 10; x++)
+                    {
+                        cell[x,y] = new Cell();
+                        cellSave[x,y] = new CellSave();
+
+                        cellSaveNum = "cellSave" + z;
+                        string jsonSaveCell = System.IO.File.ReadAllText(savePath + "cellSave" + z + ".json");
+                        cellSave[x, y] = Newtonsoft.Json.JsonConvert.DeserializeObject<CellSave>(jsonSaveCell);
+
+                        cell[x, y].LoadLandType(cellSave[x, y].GetLandType());
+                        cell[x, y].LoadMobs(cellSave[x, y].GetMobs());
+                        cell[x, y].SetVisited(cellSave[x, y].GetVisited());
+                        cell[x, y].SetPotion(cellSave[x, y].GetPotion());
+                        cell[x, y].SetKey(cellSave[x, y].GetKey());
+                        cell[x, y].LoadMob();
+                        
+                        z++;
+                    }
+                }
+                
+            }
+
+            //========== TEST ==========
 
             return currentGame;
         }
@@ -249,10 +325,15 @@ namespace KeyQuest
         {
             //string saveInfo = hero[currentGame].GetSaveInfo();
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
+            string tempSavedCell = "X";
             int savedGames = int.Parse(saved);
             string[] tempSaved = new string[savedGames];
             int x = 0;
             savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
+
+            string directory = System.IO.Directory.GetCurrentDirectory();
+            System.IO.Directory.CreateDirectory(directory + @"\CellSaveTEMP");
+            
 
             for(int i = 0; i < savedGames; i++)
             {
@@ -261,12 +342,33 @@ namespace KeyQuest
                     tempSaved[x] = savedInfo[i];
                     x++;
                 }
-                string jsonHero = System.IO.File.ReadAllText(1 + ".json");
+                string jsonHero = System.IO.File.ReadAllText(i + ".json");
                 System.IO.File.WriteAllText(x + ".json", jsonHero);
+
+                if (answer == x)
+                {
+                    for (int y = 1; y < 101; y++)
+                    {
+                        System.IO.File.Delete(directory + @"\CellSave" + answer + @"\" + "cellSave" + y + ".json");
+                    }
+                }
+
+                if(i > x)
+                {
+                    for (int y = 1; y < 101; y++)
+                    {
+                        tempSavedCell = System.IO.File.ReadAllText(directory + @"\CellSave" + i + @"\" + @"cellSave" + y + ".json");
+                        System.IO.File.WriteAllText(directory + @"\CellSaveTEMP\" + "cellSave" + y + ".json", tempSavedCell);
+                        System.IO.File.Delete(directory + @"\CellSave" + i + @"\" + "cellSave" + y + ".json");
+                        System.IO.File.WriteAllText(directory + @"\CellSave" + x + @"\" + "cellSave" + y + ".json", tempSavedCell);
+                    }
+
+                }
                 
             }
             System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", tempSaved);
             System.IO.File.Delete(x + ".json");
+
             
             if (savedGames > 0)
                 savedGames--;
@@ -277,6 +379,9 @@ namespace KeyQuest
                 savedInfo[i] = tempSaved[i];
             }
 
+            
+            System.IO.Directory.Delete(directory + @"\CellSaveTEMP");
+            System.IO.Directory.Delete(directory + @"\CellSave" + savedGames);
             return savedGames;
         }
         static int SavedGames(string action, string[] savedInfo, int savedGames)
@@ -368,7 +473,7 @@ namespace KeyQuest
                 }
 
                 Console.SetCursorPosition(Console.WindowLeft + 21, Console.CursorTop + 6);
-                if (!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 8)
+                if (!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 7)
                     ErrorInput();
                 else
                     exit = true;
@@ -426,7 +531,7 @@ namespace KeyQuest
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                 Console.WriteLine("Scanning for hostile creatures");
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     System.Threading.Thread.Sleep(100);
                     Console.Write(".");
@@ -438,6 +543,9 @@ namespace KeyQuest
         // This is when player encounters a monster
         static string Encounter(Cell[,] cell, ref Hero[] hero, ref int currentGame, ref int heroX, ref int heroY)
         {
+            Console.Beep();
+            Console.Beep();
+            Console.Beep();
             bool exit = false;
             string choice = "";
             while (!exit)
@@ -592,14 +700,16 @@ namespace KeyQuest
             }
 
             string choice = "0";
-            int alive = 1, clearGame = 0;
+            int alive = 1, clearGame = 0, newGameFile = 0;
             Hero[] hero = new Hero[10];
             HeroSave[] heroSave = new HeroSave[10];
             Cell[,] cell = new Cell[10, 10];
+            CellSave[,] cellSave = new CellSave[10, 10];
             string[] savedInfo = new string[10];
             bool exit = false;
             while (!exit)
             {
+                newGameFile = 0;
                 int savedGames = MainMenu(savedInfo);
                 BuildVersion();
                 bool runGame = false, newGame = false, loadGame = false;
@@ -612,7 +722,7 @@ namespace KeyQuest
                 {
                     if (savedGames < 10)
                     {
-                        currentGame = NewGame(hero, heroSave, savedInfo, currentGame);
+                        currentGame = NewGame(hero, heroSave, cellSave, cell, savedInfo, currentGame, newGameFile);
                         runGame = true;
                         newGame = true;
                     }
@@ -646,6 +756,7 @@ namespace KeyQuest
                                         currentGame = answer;
                                         runGame = true;
                                         loadGame = true;
+                                        newGameFile = 1;
                                         exit = true;
                                     }
                                 }
@@ -699,12 +810,15 @@ namespace KeyQuest
                 if (runGame)
                 {
                     if (newGame)
-                        BuildNewWorld(cell);
+                    {
+                        BuildNewWorld(cell, cellSave, newGameFile);
+                        newGameFile = 1;
+                    }
                     else if (loadGame)
                     {
-                        //LoadWorld(cell);
-                        currentGame = LoadGame(hero, heroSave, savedInfo, currentGame);
-                        BuildNewWorld(cell);
+                        newGameFile = 1;
+                        BuildNewWorld(cell, cellSave, newGameFile);
+                        currentGame = LoadGame(hero, heroSave, cell, cellSave, savedInfo, currentGame, newGameFile);
                     }
                     int answer = 0;
                     exit = false;
@@ -754,7 +868,7 @@ namespace KeyQuest
                                 }
                                 break;
                             case 6:
-                                SaveGame(hero, heroSave, savedInfo, ref currentGame);
+                                SaveGame(hero, heroSave, cell, cellSave, savedInfo, ref currentGame, newGameFile);
                                 break;
                             case 7:
                                 exit = true;

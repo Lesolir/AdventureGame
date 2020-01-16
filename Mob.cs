@@ -2,13 +2,13 @@ using System;
 
 namespace KeyQuest
 {
-    class Mob
+    public class Mob
     {
-        private string name = "";
-        private int health = 10;
-        private int attack = 10;
-        private int potionDrop = 0;
-        private int xpDrop = 10;
+        public string name { get; set; } = "";
+        public int health { get; set; } = 10;
+        public int attack { get; set; } = 10;
+        public int potionDrop { get; set; } = 0;
+        public int xpDrop {get; set; } = 10;
 
         
         public Mob()
