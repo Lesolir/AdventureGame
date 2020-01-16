@@ -29,7 +29,12 @@ namespace KeyQuest
             }
             catch
             {
+                for(int i = 0; i < 10; i++)
+                {
+                    savedInfo[i] = "X";
+                }
                 System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", savedInfo);
+                
             }
             int savedGames = int.Parse(saved);
             Console.Clear();
@@ -134,7 +139,7 @@ namespace KeyQuest
         {
             Random random = new Random();
             int x = 0, y = 0, mob = 0;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
                 x = random.Next(0, 10);
                 y = random.Next(0, 10);
@@ -193,8 +198,12 @@ namespace KeyQuest
         static void SaveGame(Hero[] hero, HeroSave[] heroSave, Cell[,] cell, CellSave[,] cellSave, string[] savedInfo, ref int currentGame, int newGameFile)
         {
             string saveInfo = hero[currentGame].GetSaveInfo();
-            savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
-            savedInfo[currentGame] = saveInfo;
+            string[] getInfo = new string[10];
+            
+            getInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
+            getInfo[currentGame] = saveInfo;
+            savedInfo = getInfo;
+
             System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", savedInfo);
 
             heroSave[currentGame].SetName(hero[currentGame].GetName());
@@ -207,7 +216,6 @@ namespace KeyQuest
             heroSave[currentGame].SetPositionX(hero[currentGame].GetPositionX());
             heroSave[currentGame].SetPositionY(hero[currentGame].GetPositionY());
 
-            //========== TEST ==========
             string directory = System.IO.Directory.GetCurrentDirectory();
             System.IO.Directory.CreateDirectory(directory + @"\CellSave" + currentGame);
             string savePath = directory + @"\CellSave" + currentGame + @"\";
@@ -238,8 +246,6 @@ namespace KeyQuest
                     }
                 }
             }
-
-            //========== TEST ==========
             
             string jsonHero = Newtonsoft.Json.JsonConvert.SerializeObject(heroSave[currentGame]);
 
@@ -276,7 +282,6 @@ namespace KeyQuest
             hero[currentGame].LoadPositionX(heroSave[currentGame].GetPositionX());
             hero[currentGame].LoadPositionY(heroSave[currentGame].GetPositionY());
 
-            //========== TEST ==========
             string directory = System.IO.Directory.GetCurrentDirectory();
             
             string savePath = directory + @"\CellSave" + currentGame + @"\";
@@ -310,8 +315,6 @@ namespace KeyQuest
                 
             }
 
-            //========== TEST ==========
-
             return currentGame;
         }
         // This is the delete game menu
@@ -323,12 +326,11 @@ namespace KeyQuest
         // This deletes a game
         static int DeleteGame(int answer, string[] savedInfo)
         {
-            //string saveInfo = hero[currentGame].GetSaveInfo();
             string saved = System.IO.File.ReadAllText(@"SavedGames.txt");
             string tempSavedCell = "X";
             int savedGames = int.Parse(saved);
-            string[] tempSaved = new string[savedGames];
-            int x = 0;
+            string[] tempSaved = new string[10];
+            int x = 0, z = 0;
             savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
 
             string directory = System.IO.Directory.GetCurrentDirectory();
@@ -342,29 +344,33 @@ namespace KeyQuest
                     tempSaved[x] = savedInfo[i];
                     x++;
                 }
-                string jsonHero = System.IO.File.ReadAllText(i + ".json");
-                System.IO.File.WriteAllText(x + ".json", jsonHero);
-
-                if (answer == x)
+                else
                 {
                     for (int y = 1; y < 101; y++)
                     {
                         System.IO.File.Delete(directory + @"\CellSave" + answer + @"\" + "cellSave" + y + ".json");
                     }
                 }
+                
+                string jsonHero = System.IO.File.ReadAllText(i + ".json");
+                System.IO.File.WriteAllText(x + ".json", jsonHero);
 
-                if(i > x)
+                
+
+                if(i == x && i > 0 && i != answer)
                 {
+                    z = i - 1;
                     for (int y = 1; y < 101; y++)
                     {
                         tempSavedCell = System.IO.File.ReadAllText(directory + @"\CellSave" + i + @"\" + @"cellSave" + y + ".json");
-                        System.IO.File.WriteAllText(directory + @"\CellSaveTEMP\" + "cellSave" + y + ".json", tempSavedCell);
+                        //System.IO.File.WriteAllText(directory + @"\CellSaveTEMP\" + "cellSave" + y + ".json", tempSavedCell);
                         System.IO.File.Delete(directory + @"\CellSave" + i + @"\" + "cellSave" + y + ".json");
-                        System.IO.File.WriteAllText(directory + @"\CellSave" + x + @"\" + "cellSave" + y + ".json", tempSavedCell);
+                        System.IO.File.WriteAllText(directory + @"\CellSave" + z + @"\" + "cellSave" + y + ".json", tempSavedCell);
+                        //System.IO.File.Delete(directory + @"\CellSaveTEMP\" + "cellSave" + y + ".json")
                     }
 
                 }
-                
+                z++;
             }
             System.IO.File.WriteAllLines(@"SavedGamesInfo.txt", tempSaved);
             System.IO.File.Delete(x + ".json");
@@ -380,7 +386,7 @@ namespace KeyQuest
             }
 
             
-            System.IO.Directory.Delete(directory + @"\CellSaveTEMP");
+            //System.IO.Directory.Delete(directory + @"\CellSaveTEMP");
             System.IO.Directory.Delete(directory + @"\CellSave" + savedGames);
             return savedGames;
         }
@@ -388,7 +394,6 @@ namespace KeyQuest
         {
             savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
             int answer = 0, x = 1;
-            //string id = "A";
             bool exit = false;
             while (!exit)
             {
@@ -401,10 +406,6 @@ namespace KeyQuest
                 for (int i = 0; i < savedGames; i++)
                 {
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 40, Console.CursorTop + 1);
-                    //if(i < savedGames)
-                    //{
-                        //id = System.IO.File.ReadAllText(@"SavedGameNames" + i + ".txt");
-                    //}
                     Console.WriteLine(x + ". " + savedInfo[i]);
                     x++;
                 }
@@ -768,7 +769,6 @@ namespace KeyQuest
                                         if (answer >= 0 && answer <= savedGames)
                                         {
                                             savedGames = DeleteGame(answer, savedInfo);
-                                            //exit = true
                                         }
                                         else
                                             exit = true;
