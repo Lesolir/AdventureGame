@@ -19,7 +19,7 @@ namespace KeyQuest
         {
             string name = "";
             Random random = new Random();
-            int nameRand = random.Next(0,10);
+            int nameRand = random.Next(0,18);
 
             switch(nameRand)
             {
@@ -52,6 +52,30 @@ namespace KeyQuest
                     break;
                 case 9:
                     name = "a were-rabbit";
+                    break;
+                case 10:
+                    name = "a giant spider";
+                    break;
+                case 11:
+                    name = "a big green snake";
+                    break;
+                case 12:
+                    name = "a fallen warrior";
+                    break;
+                case 13:
+                    name = "a crazy cat-lady";
+                    break;
+                case 14:
+                    name = "an assassin";
+                    break;
+                case 15:
+                    name = "a dark shadow";
+                    break;
+                case 16:
+                    name = "an evil sorcerer";
+                    break;
+                case 17:
+                    name = "an uruk-hai";
                     break;
             }
             this.name = name;

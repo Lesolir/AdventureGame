@@ -334,7 +334,7 @@ namespace KeyQuest
             savedInfo = System.IO.File.ReadAllLines(@"SavedGamesInfo.txt");
 
             string directory = System.IO.Directory.GetCurrentDirectory();
-            System.IO.Directory.CreateDirectory(directory + @"\CellSaveTEMP");
+            //System.IO.Directory.CreateDirectory(directory + @"\CellSaveTEMP");
             
 
             for(int i = 0; i < savedGames; i++)
@@ -363,10 +363,8 @@ namespace KeyQuest
                     for (int y = 1; y < 101; y++)
                     {
                         tempSavedCell = System.IO.File.ReadAllText(directory + @"\CellSave" + i + @"\" + @"cellSave" + y + ".json");
-                        //System.IO.File.WriteAllText(directory + @"\CellSaveTEMP\" + "cellSave" + y + ".json", tempSavedCell);
                         System.IO.File.Delete(directory + @"\CellSave" + i + @"\" + "cellSave" + y + ".json");
                         System.IO.File.WriteAllText(directory + @"\CellSave" + z + @"\" + "cellSave" + y + ".json", tempSavedCell);
-                        //System.IO.File.Delete(directory + @"\CellSaveTEMP\" + "cellSave" + y + ".json")
                     }
 
                 }
@@ -421,15 +419,30 @@ namespace KeyQuest
             }
             return answer;
         }
-        // This loads a saved world
-        static void LoadWorld(Cell[,] cell)
+        // This is a code to show the location of all keys
+        static void ShowKey(Cell[,] cell)
         {
-
+            Console.Clear();
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 6);
+            Console.WriteLine("Bringing forth the keys of the world");
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    cell[x, y].SetShowKey();
+                }
+            }
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 25, Console.CursorTop + 1);
+            for (int i = 0; i < 10; i++)
+            {
+                System.Threading.Thread.Sleep(100);
+                Console.Write(".");
+            }
         }
         // This is the action menu
-        static int HeroAction(Hero[] hero, ref int currentGame, ref Cell[,] cell)
+        static string HeroAction(Hero[] hero, ref int currentGame, ref Cell[,] cell)
         {
-            int answer = 0;
+            string answer = "X";
             bool exit = false;
             while (exit == false)
             {
@@ -461,7 +474,9 @@ namespace KeyQuest
                     for (int z = 60; z < 90; z += 3)
                     {
                         Console.SetCursorPosition(Console.WindowLeft + z, Console.CursorTop);
-                        if (cell[cellX, cellY].GetVisited() == 0)
+                        if(cell[cellX, cellY].GetShowKey() == 1 && cell[cellX, cellY].GetKey() == 1)
+                            Console.Write("[?]");
+                        else if (cell[cellX, cellY].GetVisited() == 0)
                             Console.Write("[ ]");
                         else if (cellX == heroX && cellY == heroY)
                             Console.Write("[@]");
@@ -474,7 +489,8 @@ namespace KeyQuest
                 }
 
                 Console.SetCursorPosition(Console.WindowLeft + 21, Console.CursorTop + 6);
-                if (!int.TryParse(Console.ReadLine(), out answer) || answer < 1 || answer > 7)
+                answer = Console.ReadLine();
+                if (answer != "1" && answer != "2" && answer != "3" && answer != "4" && answer != "5" && answer != "6" && answer != "7" && answer != "2020")
                     ErrorInput();
                 else
                     exit = true;
@@ -506,8 +522,8 @@ namespace KeyQuest
                     Console.WriteLine("Slowly the door creeks open..");
                     System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 4);
-                    System.Threading.Thread.Sleep(1500);
                     Console.WriteLine("You are the best! You can feel the life flowing back to you..You cleared the quest!");
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                     Console.WriteLine("Press ENTER");
                     Console.ReadLine();
@@ -515,12 +531,16 @@ namespace KeyQuest
                 }
                 else
                 {
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                     Console.WriteLine("Unfortunately you have not found 10 keys yet...");
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
                     Console.WriteLine("You look back over your shoulder into the dark lands behind you");
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
                     Console.WriteLine("You do not want to do it...you have had enough of this");
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
                     Console.WriteLine("But slowly turning around you know what you have to do");
                 }
@@ -530,12 +550,21 @@ namespace KeyQuest
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 6);
                 Console.WriteLine("You come to {0}", land);
                 Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 2);
-                Console.WriteLine("Scanning for hostile creatures");
-                Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
-                for (int i = 0; i < 10; i++)
+                if(cell[heroX, heroY].GetVisited() == 0)
                 {
-                    System.Threading.Thread.Sleep(100);
-                    Console.Write(".");
+                    Console.WriteLine("Scanning for hostile creatures");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+                    for (int i = 0; i < 10; i++)
+                    {
+                        System.Threading.Thread.Sleep(100);
+                        Console.Write(".");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("You have been here before.");
+                    Console.SetCursorPosition((Console.WindowWidth / 2) - 34, Console.CursorTop + 1);
+                    Console.WriteLine("This place have not changed since the last time you were here.");
                 }
             }
             Console.WriteLine();
@@ -820,45 +849,45 @@ namespace KeyQuest
                         BuildNewWorld(cell, cellSave, newGameFile);
                         currentGame = LoadGame(hero, heroSave, cell, cellSave, savedInfo, currentGame, newGameFile);
                     }
-                    int answer = 0;
+                    choice = "0";
                     exit = false;
                     while (!exit)
                     {
                         Console.Clear();
-                        answer = HeroAction(hero, ref currentGame, ref cell);
+                        choice = HeroAction(hero, ref currentGame, ref cell);
                         int test = 0;
 
-                        switch (answer)
+                        switch (choice)
                         {
-                            case 1:
+                            case "1":
                                 test = hero[currentGame].GetPositionY();
                                 if (test == 1)
                                     WallError();
                                 else
                                     hero[currentGame].SetPositionY(-1);
                                 break;
-                            case 2:
+                            case "2":
                                 test = hero[currentGame].GetPositionX();
                                 if (test == 10)
                                     WallError();
                                 else
                                     hero[currentGame].SetPositionX(+1);
                                 break;
-                            case 3:
+                            case "3":
                                 test = hero[currentGame].GetPositionY();
                                 if (test == 10)
                                     WallError();
                                 else
                                     hero[currentGame].SetPositionY(+1);
                                 break;
-                            case 4:
+                            case "4":
                                 test = hero[currentGame].GetPositionX();
                                 if (test == 1)
                                     WallError();
                                 else
                                     hero[currentGame].SetPositionX(-1);
                                 break;
-                            case 5:
+                            case "5":
                                 if(hero[currentGame].GetPotion() >= 1 && hero[currentGame].GetHealth() < 100)
                                 {
                                    int potion = hero[currentGame].GetHealth();
@@ -867,16 +896,19 @@ namespace KeyQuest
                                     hero[currentGame].SetPotion(-1);
                                 }
                                 break;
-                            case 6:
+                            case "6":
                                 SaveGame(hero, heroSave, cell, cellSave, savedInfo, ref currentGame, newGameFile);
                                 break;
-                            case 7:
+                            case "7":
                                 exit = true;
+                                break;
+                            case "2020":
+                                ShowKey(cell);
                                 break;
                             default:
                                 break;
                         }
-                        if (answer > 0 && answer < 5)
+                        if (choice == "1" || choice == "2" || choice == "3" || choice == "4")
                         {
                             int heroX = hero[currentGame].GetPositionX() - 1;
                             int heroY = hero[currentGame].GetPositionY() - 1;

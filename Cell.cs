@@ -8,6 +8,7 @@ namespace KeyQuest
         private int mobs = 0;
         private Mob[] mob = new Mob[3];
         private int key = 0;
+        private int showKey = 0;
         private int potion = 0;
         private int visited = 0;
 
@@ -193,6 +194,14 @@ namespace KeyQuest
         {
             int key = this.key;
             return key;
+        }
+        public void SetShowKey()
+        {
+            this.showKey = 1;
+        }
+        public int GetShowKey()
+        {
+            return this.showKey;
         }
         public void SetPotion(int potion)
         {
